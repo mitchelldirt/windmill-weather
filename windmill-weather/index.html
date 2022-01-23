@@ -7,15 +7,20 @@
     <title>Vite App</title>
     <link rel="stylesheet" href="./dist/output.css">
   </head>
-  <body>
-    <span class="bg-gray-700 text-red-500">Howdy</span>
-    <form class="flex" action="">
+  <body class="flex-col flex align-middle items-center justify-center">
+    <span class="text-orange-500">Windmill Weather</span>
+    <form class="flex align-middle mt-3 ml-3" action="">
       <label for="searchBar"></label>
-      <input type="text" name="searchBar" id="searchBar">
-      <button id="submitBtn" class="rounded-full bg-red-800 text-white px-2 mt-4 ml-2">Search</button>
-      <span class="rounded-lg bg-green-600 w-4 h-4"></span>
+      <input class="h-5 border-neutral-900 border-2 rounded-full py-1 px-1" type="text" name="searchBar" id="searchBar">
+      <button id="submitBtn" class="rounded-full bg-orange-500 text-white px-2 ml-2 h-5 text-sm text-center">Search</button>
     </form>
-    
+    <div class="ml-3 mt-2">
+      <h1 id="city"></h1>
+    <p id="temperature"></p>
+    <p id="wind"></p>
+    <p id="precip"></p>
+    <p id="weather"></p>
+  </div>
     <script type="module" src="./src/main.ts"></script>
   </body>
 </html>
