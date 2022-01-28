@@ -5,7 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
-    <link rel="stylesheet" href="./dist/output.css">
+    <link rel="stylesheet" href="/dist/output.css">
   </head>
   <body class="flex-col flex align-middle items-center justify-center">
     <span class="text-orange-500">Windmill Weather</span>
@@ -21,6 +21,7 @@
     <p id="precip"></p>
     <p id="weather"></p>
   </div>
-    <script type="module" src="./src/main.ts"></script>
+  <script> var exports = {}; </script>
+    <script type="module" src="/dist/app.js"></script>
   </body>
 </html>
