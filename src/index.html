@@ -3,11 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>Windmill Weather</title>
+    <link rel="shortcut icon" href="./assets/windmill.png" type="image/x-icon">
     <link rel="stylesheet" href="input.css">
   </head>
-  <body class="flex-col flex align-middle items-center justify-center">
-    <span class="text-orange-500">Windmill Weather</span>
+  <body class="flex-col flex align-middle items-center justify-center bg-neutral-100">
+    <span class="text-orange-500 font-custom font-bold text-3xl">Windmill Weather</span>
     <form class="flex align-middle mt-3 ml-3" action="">
       <label for="searchBar"></label>
       <input class="h-5 border-neutral-900 border-2 rounded-full py-1 px-1" type="text" name="searchBar" id="searchBar">
@@ -19,8 +20,12 @@
     <p id="wind"></p>
     <p id="precip"></p>
     <p id="weather"></p>
-  </div>
-  <script> var exports = {}; </script>
+    </div>
+    <footer>
+      <div>
+        <p>Windmill icon created by Freepik</p>
+      </div>
+    </footer>
     <script type="module" src="app.ts"></script>
   </body>
 </html>

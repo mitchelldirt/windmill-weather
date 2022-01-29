@@ -1,8 +1,9 @@
 {
   "name": "windmill-weather",
+  "source": "./src/index.html",
   "version": "0.0.0",
   "scripts": {
-    "tailwindwatch": "npx tailwindcss -i ./src/index.css -o ./src/output.css --watch",
+    "tailwindwatch": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
     "start": "parcel",
     "build": "parcel build"
   },

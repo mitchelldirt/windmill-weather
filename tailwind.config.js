@@ -1,10 +1,11 @@
 module.exports = {
-  content: ["./src/*.ts",
-  "./index.html",
-"./dist/index.html",
-"./dist/assets/index.40633bcd.js"],
+  content: ["./src/**/*.{html,js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        custom: ['Caveat', 'sans-serif']
+      }
+    },
   },
   plugins: [],
 }

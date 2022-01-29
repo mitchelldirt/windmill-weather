@@ -1,4 +1,4 @@
-import '../dist/output.css'
+import "../dist/output.css"
 const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement;
 const searchBar = document.getElementById("searchBar") as HTMLInputElement;
 const temperature = document.getElementById("temperature") as HTMLParagraphElement;

@@ -1,5 +1,9 @@
+@import "https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap";
 @tailwind base;
+
 @tailwind components;
+
 @tailwind utilities;
 /*
 ! tailwindcss v3.0.15 | MIT License | https://tailwindcss.com
@@ -426,7 +430,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: none;
 }
 
-*, ::before, ::after {
+*, ::before, ::after{
   --tw-translate-x: 0;
   --tw-translate-y: 0;
   --tw-rotate: 0;
@@ -471,94 +475,127 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-backdrop-sepia:  ;
 }
 
-.mt-3 {
+.mt-3{
   margin-top: 0.75rem;
 }
 
-.ml-3 {
+.ml-3{
   margin-left: 0.75rem;
 }
 
-.ml-2 {
+.ml-2{
   margin-left: 0.5rem;
 }
 
-.mt-2 {
+.mt-2{
   margin-top: 0.5rem;
 }
 
-.flex {
+.flex{
   display: flex;
 }
 
-.h-5 {
+.h-5{
   height: 1.25rem;
 }
 
-.flex-col {
+.flex-col{
   flex-direction: column;
 }
 
-.items-center {
+.items-center{
   align-items: center;
 }
 
-.justify-center {
+.justify-center{
   justify-content: center;
 }
 
-.rounded-full {
+.rounded-full{
   border-radius: 9999px;
 }
 
-.border-2 {
+.border-2{
   border-width: 2px;
 }
 
-.border-neutral-900 {
+.border-neutral-900{
   --tw-border-opacity: 1;
   border-color: rgb(23 23 23 / var(--tw-border-opacity));
 }
 
-.bg-orange-500 {
+.bg-neutral-100{
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 245 / var(--tw-bg-opacity));
+}
+
+.bg-orange-500{
   --tw-bg-opacity: 1;
   background-color: rgb(249 115 22 / var(--tw-bg-opacity));
 }
 
-.py-1 {
+.py-1{
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
 
-.px-1 {
+.px-1{
   padding-left: 0.25rem;
   padding-right: 0.25rem;
 }
 
-.px-2 {
+.px-2{
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 }
 
-.text-center {
+.text-center{
   text-align: center;
 }
 
-.align-middle {
+.align-middle{
   vertical-align: middle;
 }
 
-.text-sm {
+.font-custom{
+  font-family: Caveat, sans-serif;
+}
+
+.text-sm{
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
 
-.text-orange-500 {
+.text-lg{
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.text-xl{
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-4xl{
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+.text-3xl{
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.font-bold{
+  font-weight: 700;
+}
+
+.text-orange-500{
   --tw-text-opacity: 1;
   color: rgb(249 115 22 / var(--tw-text-opacity));
 }
 
-.text-white {
+.text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
