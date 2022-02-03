@@ -529,30 +529,25 @@ let city = document.getElementById("city");
 let data;
 submitBtn.onclick = (e)=>{
     e.preventDefault();
-    getWeather(searchBar).then((Response)=>{
-        city.innerHTML = Response[0];
-        temperature.innerHTML = Response[1];
-        wind.innerHTML = Response[2];
-        weather.innerHTML = Response[3];
-    });
+    locationByName(searchBar);
     searchBar.value = "";
 };
-async function getWeather(input) {
+async function getWeather(apiCall) {
     try {
-        let output = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=imperial&appid=79994613e7af015836a5a0e8225ca668`, {
+        let output = await fetch(apiCall, {
             mode: "cors"
         });
         if (output.status === 200) {
-            data = await output.json();
-            console.log(data);
+            let data1 = await output.json();
+            console.log(data1);
             // @ts-ignore
-            let dataCity = `${data.name}, ${data.sys.country}`;
+            let dataCity = `${data1.name}, ${data1.sys.country}`;
             // @ts-ignore
-            let dataTemp = `Temperature: ${Math.floor(data.main.temp)}°F`;
+            let dataTemp = `Temperature: ${Math.floor(data1.main.temp)}°F`;
             // @ts-ignore
-            let dataWind = `Wind Speed: ${Math.floor(data.wind.speed)}mp/h`;
+            let dataWind = `Wind Speed: ${Math.floor(data1.wind.speed)}mp/h`;
             // @ts-ignore
-            let dataWeather = `Weather: ${data.weather[0].main}`;
+            let dataWeather = `Weather: ${data1.weather[0].main}`;
             return [
                 dataCity,
                 dataTemp,
@@ -571,6 +566,30 @@ window.onload = ()=>{
     submitBtn.click();
     searchBar.value = "";
 };
+let locationBtn = document.getElementById("location");
+locationBtn.onclick = ()=>{
+    navigator.geolocation.getCurrentPosition(function(position) {
+        locationByCords(position.coords.latitude, position.coords.longitude);
+    });
+};
+function locationByCords(lat, long) {
+    let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial&appid=79994613e7af015836a5a0e8225ca668`;
+    return getWeather(apiCall).then((Response)=>{
+        city.innerHTML = Response[0];
+        temperature.innerHTML = Response[1];
+        wind.innerHTML = Response[2];
+        weather.innerHTML = Response[3];
+    });
+}
+function locationByName(input) {
+    let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=imperial&appid=79994613e7af015836a5a0e8225ca668`;
+    return getWeather(apiCall).then((Response)=>{
+        city.innerHTML = Response[0];
+        temperature.innerHTML = Response[1];
+        wind.innerHTML = Response[2];
+        weather.innerHTML = Response[3];
+    });
+}
 
 },{"../dist/output.css":"ffhVg"}],"ffhVg":[function() {},{}]},["g75ug","kuM8f"], "kuM8f", "parcelRequire19c7")
 
