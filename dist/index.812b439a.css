@@ -499,6 +499,18 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 1.25rem;
 }
 
+.h-6{
+  height: 1.5rem;
+}
+
+.w-24{
+  width: 6rem;
+}
+
+.w-6{
+  width: 1.5rem;
+}
+
 .flex-col{
   flex-direction: column;
 }
@@ -561,29 +573,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-family: Caveat, sans-serif;
 }
 
-.text-sm{
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.text-lg{
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
-.text-xl{
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-}
-
-.text-4xl{
-  font-size: 2.25rem;
-  line-height: 2.5rem;
-}
-
 .text-3xl{
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+
+.text-sm{
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 .font-bold{

@@ -1,32 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Windmill Weather</title>
-    <link rel="shortcut icon" href="./assets/windmill.png" type="image/x-icon">
-    <link rel="stylesheet" href="input.css">
-  </head>
-  <body class="flex-col flex align-middle items-center justify-center bg-neutral-100">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Windmill Weather</title>
+  <link rel="shortcut icon" href="./assets/windmill.png" type="image/x-icon">
+  <link rel="stylesheet" href="input.css">
+</head>
+
+<body class="flex-col flex align-middle items-center justify-center bg-neutral-100">
+  <div>
+    <button id="location"><img class="w-6 h-6" src="./assets/placeholder.png"
+        alt="Location pin. Use to get current locations weather"></button>
     <span class="text-orange-500 font-custom font-bold text-3xl">Windmill Weather</span>
-    <form class="flex align-middle mt-3 ml-3" action="">
-      <label for="searchBar"></label>
-      <input class="h-5 border-neutral-900 border-2 rounded-full py-1 px-1" type="text" name="searchBar" id="searchBar">
-      <button id="submitBtn" class="rounded-full bg-orange-500 text-white px-2 ml-2 h-5 text-sm text-center">Search</button>
-    </form>
-    <button id="location">Weather where I am</button>
-    <div class="ml-3 mt-2">
-      <h1 id="city"></h1>
+    <button class="w-6 h-6" id="darkModeToggle"><img class="w-6 h-6" src="./assets/moon.png"
+        alt="cute smiling moon. Clicking this changes it to a sun and turns the background to dark mode"></button>
+  </div>
+
+  <form class="flex align-middle mt-3 ml-3" action="">
+    <label for="searchBar"></label>
+    <input class="h-5 border-neutral-900 border-2 rounded-full py-1 px-1" type="text" name="searchBar" id="searchBar">
+    <button id="submitBtn"
+      class="rounded-full bg-orange-500 text-white px-2 ml-2 h-5 text-sm text-center">Search</button>
+  </form>
+
+  <div class="ml-3 mt-2">
+    <h1 id="city"></h1>
     <p id="temperature"></p>
     <p id="wind"></p>
     <p id="precip"></p>
     <p id="weather"></p>
+  </div>
+  <footer>
+    <div>
+      <p>Windmill, location pin, moon, and sun icon created by Freepik</p>
     </div>
-    <footer>
-      <div>
-        <p>Windmill icon created by Freepik</p>
-      </div>
-    </footer>
-    <script type="module" src="app.ts"></script>
-  </body>
+  </footer>
+  <script type="module" src="app.ts"></script>
+</body>
+
 </html>
