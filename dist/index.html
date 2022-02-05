@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 
 <head>
   <meta charset="UTF-8">
@@ -9,29 +9,29 @@
   <link rel="stylesheet" href="/index.812b439a.css">
 </head>
 
-<body class="flex-col flex align-middle items-center justify-center bg-neutral-100">
+<body class="flex-col flex align-middle items-center justify-center bg-neutral-100 dark:bg-slate-800">
   <div>
     <button id="location"><img class="w-6 h-6" src="/placeholder.5c4c624c.png" alt="Location pin. Use to get current locations weather"></button>
-    <span class="text-orange-500 font-custom font-bold text-3xl">Windmill Weather</span>
-    <button class="w-6 h-6" id="darkModeToggle"><img class="w-6 h-6" src="/moon.0469fd53.png" alt="cute smiling moon. Clicking this changes it to a sun and turns the background to dark mode"></button>
+    <span class="text-orange-500 font-custom font-bold text-3xl ml-4 mr-4">Windmill Weather</span>
+    <button class="w-6 h-6" id="darkModeToggle"><img id="darkModeIcon" class="w-6 h-6" src="/moon.0469fd53.png" alt="cute smiling moon. Clicking this changes it to a sun and turns the background to dark mode"></button>
   </div>
 
   <form class="flex align-middle mt-3 ml-3" action="">
     <label for="searchBar"></label>
-    <input class="h-5 border-neutral-900 border-2 rounded-full py-1 px-1" type="text" name="searchBar" id="searchBar">
+    <input class="h-5 border-neutral-900 dark:border-neutral-50 border-2 rounded-full py-1 px-1" type="text" name="searchBar" id="searchBar">
     <button id="submitBtn" class="rounded-full bg-orange-500 text-white px-2 ml-2 h-5 text-sm text-center">Search</button>
   </form>
 
   <div class="ml-3 mt-2">
-    <h1 id="city"></h1>
-    <p id="temperature"></p>
-    <p id="wind"></p>
-    <p id="precip"></p>
-    <p id="weather"></p>
+    <h1 class="dark:text-white" id="city"></h1>
+    <p class="dark:text-white" id="temperature"></p>
+    <p class="dark:text-white" id="wind"></p>
+    <p class="dark:text-white" id="precip"></p>
+    <p class="dark:text-white" id="weather"></p>
   </div>
   <footer>
     <div>
-      <p>Windmill, location pin, moon, and sun icon created by Freepik</p>
+      <p class="dark:text-white">Windmill, location pin, moon, and sun icon created by Freepik</p>
     </div>
   </footer>
   <script src="/index.6b815632.js" defer=""></script>

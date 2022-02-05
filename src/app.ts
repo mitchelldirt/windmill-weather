@@ -69,3 +69,21 @@ function locationByName(input: HTMLInputElement) {
     wind.innerHTML = Response[2];
     weather.innerHTML = Response[3];
 })};
+
+let darkModeBtn = document.getElementById("darkModeToggle") as HTMLButtonElement;
+let darkModeIcon = document.getElementById("darkModeIcon") as HTMLImageElement;
+darkModeBtn.onclick = (e) => {
+  // If you don't slice it will have the whole url as the source :(
+  let currentSrc = darkModeIcon.src.slice(-18);
+  let htmlTag = document.querySelector("html") as HTMLElement;
+  e.preventDefault();
+  let moonSrc = "/moon.0469fd53.png";
+  let sunSrc = "/sun.09088062.png"
+  if (currentSrc === moonSrc) {
+    darkModeIcon.src = sunSrc;
+    htmlTag.classList.toggle("dark");
+  } else {
+    darkModeIcon.src = moonSrc;
+    htmlTag.classList.toggle("dark");
+  }
+}

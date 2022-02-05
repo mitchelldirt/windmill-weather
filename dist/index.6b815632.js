@@ -590,6 +590,23 @@ function locationByName(input) {
         weather.innerHTML = Response[3];
     });
 }
+let darkModeBtn = document.getElementById("darkModeToggle");
+let darkModeIcon = document.getElementById("darkModeIcon");
+darkModeBtn.onclick = (e)=>{
+    // If you don't slice it will have the whole url as the source :(
+    let currentSrc = darkModeIcon.src.slice(-18);
+    let htmlTag = document.querySelector("html");
+    e.preventDefault();
+    let moonSrc = "/moon.0469fd53.png";
+    let sunSrc = "/sun.09088062.png";
+    if (currentSrc === moonSrc) {
+        darkModeIcon.src = sunSrc;
+        htmlTag.classList.toggle("dark");
+    } else {
+        darkModeIcon.src = moonSrc;
+        htmlTag.classList.toggle("dark");
+    }
+};
 
 },{"../dist/output.css":"ffhVg"}],"ffhVg":[function() {},{}]},["g75ug","kuM8f"], "kuM8f", "parcelRequire19c7")
 
