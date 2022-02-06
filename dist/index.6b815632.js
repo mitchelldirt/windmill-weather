@@ -590,23 +590,15 @@ function locationByName(input) {
         weather.innerHTML = Response[3];
     });
 }
-//comment to get this to go to vercel
+let sunIcon = document.getElementById("sunIcon");
+let moonIcon = document.getElementById("moonIcon");
 let darkModeBtn = document.getElementById("darkModeToggle");
-let moonSrc = "/moon.png";
-let sunSrc = "/sun.png";
 let htmlTag = document.querySelector("html");
 darkModeBtn.onclick = (e)=>{
     e.preventDefault();
-    // If you don't slice it will have the whole url as the source :(
-    let darkModeIcon = document.getElementById("darkModeIcon");
-    let currentSrc = darkModeIcon.src.slice(-18);
-    if (currentSrc === moonSrc) {
-        darkModeIcon.src = sunSrc;
-        htmlTag.classList.toggle("dark");
-    } else {
-        darkModeIcon.src = moonSrc;
-        htmlTag.classList.toggle("dark");
-    }
+    htmlTag.classList.toggle("dark");
+    sunIcon.classList.toggle("hidden");
+    moonIcon.classList.toggle("hidden");
 };
 
 },{"../dist/output.css":"ffhVg"}],"ffhVg":[function() {},{}]},["g75ug","kuM8f"], "kuM8f", "parcelRequire19c7")
