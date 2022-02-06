@@ -592,8 +592,8 @@ function locationByName(input) {
 }
 //comment to get this to go to vercel
 let darkModeBtn = document.getElementById("darkModeToggle");
-let moonSrc = "/moon.0469fd53.png";
-let sunSrc = "/sun.09088062.png";
+let moonSrc = "/moon.png";
+let sunSrc = "/sun.png";
 let htmlTag = document.querySelector("html");
 darkModeBtn.onclick = (e)=>{
     e.preventDefault();
