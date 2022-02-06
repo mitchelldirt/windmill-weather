@@ -71,6 +71,7 @@ function locationByName(input: HTMLInputElement) {
   })
 };
 
+//comment to get this to go to vercel
 let darkModeBtn = document.getElementById("darkModeToggle") as HTMLButtonElement;
 let moonSrc = "/moon.0469fd53.png";
 let sunSrc = "/sun.09088062.png";

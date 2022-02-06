@@ -590,6 +590,7 @@ function locationByName(input) {
         weather.innerHTML = Response[3];
     });
 }
+//comment to get this to go to vercel
 let darkModeBtn = document.getElementById("darkModeToggle");
 let moonSrc = "/moon.0469fd53.png";
 let sunSrc = "/sun.09088062.png";
