@@ -591,14 +591,14 @@ function locationByName(input) {
     });
 }
 let darkModeBtn = document.getElementById("darkModeToggle");
+let moonSrc = "/moon.0469fd53.png";
+let sunSrc = "/sun.09088062.png";
+let htmlTag = document.querySelector("html");
 darkModeBtn.onclick = (e)=>{
+    e.preventDefault();
     // If you don't slice it will have the whole url as the source :(
     let darkModeIcon = document.getElementById("darkModeIcon");
     let currentSrc = darkModeIcon.src.slice(-18);
-    let htmlTag = document.querySelector("html");
-    e.preventDefault();
-    let moonSrc = "/moon.0469fd53.png";
-    let sunSrc = "/sun.09088062.png";
     if (currentSrc === moonSrc) {
         darkModeIcon.src = sunSrc;
         htmlTag.classList.toggle("dark");
