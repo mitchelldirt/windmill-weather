@@ -591,9 +591,9 @@ function locationByName(input) {
     });
 }
 let darkModeBtn = document.getElementById("darkModeToggle");
-let darkModeIcon = document.getElementById("darkModeIcon");
 darkModeBtn.onclick = (e)=>{
     // If you don't slice it will have the whole url as the source :(
+    let darkModeIcon = document.getElementById("darkModeIcon");
     let currentSrc = darkModeIcon.src.slice(-18);
     let htmlTag = document.querySelector("html");
     e.preventDefault();

@@ -46,9 +46,9 @@ window.onload = () => {
 let locationBtn = document.getElementById("location") as HTMLButtonElement;
 
 locationBtn.onclick = () => {
-navigator.geolocation.getCurrentPosition(function (position) {
-  locationByCords(position.coords.latitude, position.coords.longitude);
-})
+  navigator.geolocation.getCurrentPosition(function (position) {
+    locationByCords(position.coords.latitude, position.coords.longitude);
+  })
 };
 
 function locationByCords(lat: any, long: any) {
@@ -68,12 +68,13 @@ function locationByName(input: HTMLInputElement) {
     temperature.innerHTML = Response[1];
     wind.innerHTML = Response[2];
     weather.innerHTML = Response[3];
-})};
+  })
+};
 
 let darkModeBtn = document.getElementById("darkModeToggle") as HTMLButtonElement;
-let darkModeIcon = document.getElementById("darkModeIcon") as HTMLImageElement;
 darkModeBtn.onclick = (e) => {
   // If you don't slice it will have the whole url as the source :(
+  let darkModeIcon = document.getElementById("darkModeIcon") as HTMLImageElement;
   let currentSrc = darkModeIcon.src.slice(-18);
   let htmlTag = document.querySelector("html") as HTMLElement;
   e.preventDefault();
