@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap');
 
 /*
-! tailwindcss v3.0.15 | MIT License | https://tailwindcss.com
+! tailwindcss v3.0.19 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -496,6 +496,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .flex{
   display: flex;
+}
+
+.hidden{
+  display: none;
 }
 
 .h-6{

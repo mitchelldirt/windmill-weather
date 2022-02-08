@@ -71,21 +71,13 @@ function locationByName(input: HTMLInputElement) {
   })
 };
 
-//comment to get this to go to vercel
+let sunIcon = document.getElementById("sunIcon") as HTMLImageElement;
+let moonIcon = document.getElementById("moonIcon") as HTMLImageElement;
 let darkModeBtn = document.getElementById("darkModeToggle") as HTMLButtonElement;
-let moonSrc = "/moon.png";
-let sunSrc = "/sun.png";
 let htmlTag = document.querySelector("html") as HTMLElement;
 darkModeBtn.onclick = (e) => {
   e.preventDefault();
-  // If you don't slice it will have the whole url as the source :(
-  let darkModeIcon = document.getElementById("darkModeIcon") as HTMLImageElement;
-  let currentSrc = darkModeIcon.src.slice(-18);
-  if (currentSrc === moonSrc) {
-    darkModeIcon.src = sunSrc;
-    htmlTag.classList.toggle("dark");
-  } else {
-    darkModeIcon.src = moonSrc;
-    htmlTag.classList.toggle("dark");
-  }
+  htmlTag.classList.toggle("dark");
+  sunIcon.classList.toggle("hidden");
+  moonIcon.classList.toggle("hidden")
 }
