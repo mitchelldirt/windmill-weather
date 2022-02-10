@@ -6,7 +6,7 @@
 
 @tailwind utilities;
 /*
-! tailwindcss v3.0.19 | MIT License | https://tailwindcss.com
+! tailwindcss v3.0.15 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -519,8 +519,20 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 1.5rem;
 }
 
+.w-2\/4{
+  width: 50%;
+}
+
+.w-11\/12{
+  width: 91.666667%;
+}
+
 .flex-col{
   flex-direction: column;
+}
+
+.content-center{
+  align-content: center;
 }
 
 .items-center{
@@ -529,6 +541,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .justify-center{
   justify-content: center;
+}
+
+.self-center{
+  align-self: center;
 }
 
 .rounded-full{
