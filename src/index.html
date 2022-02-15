@@ -35,7 +35,14 @@
       <p class="dark:text-white" id="weather"></p>
     </div>
     <div class="flex flex-col w-2/4 items-center">
-      <p class="">Celcius to farenheit button</p>
+      <div>
+        <form action="">
+        <label for="fahrenheit">Imperial</label>
+        <input type="radio" name="temp" id="fahrenheit" value="fahrenheit" checked>
+        <label for="celcius">Metric</label>
+        <input type="radio" name="temp" id="celsius" value="celsius">
+      </form>
+      </div>
       <p class="dark:text-white" id="temperature"></p>
       <p>Icon for the current weather</p>
     </div>

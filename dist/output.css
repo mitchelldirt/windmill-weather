@@ -518,16 +518,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 50%;
 }
 
-.w-11\/12{
-  width: 91.666667%;
-}
-
 .flex-col{
   flex-direction: column;
-}
-
-.content-center{
-  align-content: center;
 }
 
 .items-center{
@@ -536,10 +528,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .justify-center{
   justify-content: center;
-}
-
-.self-center{
-  align-self: center;
 }
 
 .rounded-full{

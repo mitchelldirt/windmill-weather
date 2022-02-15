@@ -526,6 +526,10 @@ const temperature = document.getElementById("temperature");
 const wind = document.getElementById("wind");
 const weather = document.getElementById("weather");
 let city = document.getElementById("city");
+let celsius = document.getElementById("celsius");
+let fahrenheit = document.getElementById("fahrenheit");
+let previousLatitude;
+let previousLongitude;
 let data;
 submitBtn.onclick = (e)=>{
     e.preventDefault();
@@ -543,11 +547,13 @@ async function getWeather(apiCall) {
             // @ts-ignore
             let dataCity = `${data1.name}, ${data1.sys.country}`;
             // @ts-ignore
-            let dataTemp = `Temperature: ${Math.floor(data1.main.temp)}°F`;
+            let dataTemp = whichTemperature(data1.main.temp);
             // @ts-ignore
             let dataWind = `Wind Speed: ${Math.floor(data1.wind.speed)}mp/h`;
             // @ts-ignore
             let dataWeather = `Weather: ${data1.weather[0].main}`;
+            previousLatitude = data1.coord.lat;
+            previousLongitude = data1.coord.lon;
             return [
                 dataCity,
                 dataTemp,
@@ -599,6 +605,18 @@ darkModeBtn.onclick = (e)=>{
     htmlTag.classList.toggle("dark");
     sunIcon.classList.toggle("hidden");
     moonIcon.classList.toggle("hidden");
+};
+function whichTemperature(input) {
+    if (celsius.checked === true) return `Temperature: ${Math.floor((+input - 32) / 1.8)}°C`;
+    else return `Temperature: ${Math.round(+input)}°F`;
+}
+fahrenheit.onclick = ()=>{
+    //@ts-ignore
+    locationByCords(previousLatitude, previousLongitude);
+};
+celsius.onclick = ()=>{
+    //@ts-ignore
+    locationByCords(previousLatitude, previousLongitude);
 };
 
 },{"../dist/output.css":"ffhVg"}],"ffhVg":[function() {},{}]},["g75ug","kuM8f"], "kuM8f", "parcelRequire19c7")

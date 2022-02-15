@@ -5,6 +5,10 @@ const temperature = document.getElementById("temperature") as HTMLParagraphEleme
 const wind = document.getElementById("wind") as HTMLParagraphElement;
 const weather = document.getElementById("weather") as HTMLParagraphElement;
 let city = document.getElementById("city") as HTMLHeadingElement;
+let celsius = document.getElementById("celsius") as HTMLInputElement;
+let fahrenheit = document.getElementById("fahrenheit") as HTMLInputElement;
+let previousLatitude: string;
+let previousLongitude: string;
 let data: JSON;
 
 submitBtn.onclick = (e) => {
@@ -22,11 +26,13 @@ async function getWeather(apiCall: string): Promise<any> {
       // @ts-ignore
       let dataCity = `${data.name}, ${data.sys.country}`
       // @ts-ignore
-      let dataTemp = `Temperature: ${Math.floor(data.main.temp)}°F`;
+      let dataTemp = whichTemperature(data.main.temp);
       // @ts-ignore
       let dataWind = `Wind Speed: ${Math.floor(data.wind.speed)}mp/h`;
       // @ts-ignore
       let dataWeather = `Weather: ${data.weather[0].main}`;
+      previousLatitude = data.coord.lat;
+      previousLongitude = data.coord.lon;
       return [dataCity, dataTemp, dataWind, dataWeather];
     }
   }
@@ -80,4 +86,22 @@ darkModeBtn.onclick = (e) => {
   htmlTag.classList.toggle("dark");
   sunIcon.classList.toggle("hidden");
   moonIcon.classList.toggle("hidden")
+}
+
+function whichTemperature(input: string): string {
+  if (celsius.checked === true) {
+    return `Temperature: ${Math.floor((+input - 32) / 1.8)}°C`;
+  } else {
+    return `Temperature: ${Math.round(+input)}°F`;
+  }
+}
+
+fahrenheit.onclick = () => {
+  //@ts-ignore
+  locationByCords(previousLatitude, previousLongitude);
+}
+
+celsius.onclick = () => {
+  //@ts-ignore
+  locationByCords(previousLatitude, previousLongitude);
 }
