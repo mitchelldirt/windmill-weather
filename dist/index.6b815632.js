@@ -530,6 +530,9 @@ let celsius = document.getElementById("celsius");
 let fahrenheit = document.getElementById("fahrenheit");
 let previousLatitude;
 let previousLongitude;
+let units = 'imperial';
+let temperatureUnit = 'F';
+let speedUnit = 'mph';
 let data;
 submitBtn.onclick = (e)=>{
     e.preventDefault();
@@ -547,9 +550,11 @@ async function getWeather(apiCall) {
             // @ts-ignore
             let dataCity = `${data1.name}, ${data1.sys.country}`;
             // @ts-ignore
-            let dataTemp = whichTemperature(data1.main.temp);
+            let dataTemp = `${Math.floor(data1.main.temp)}°${temperatureUnit}`;
             // @ts-ignore
-            let dataWind = `Wind Speed: ${Math.floor(data1.wind.speed)}mp/h`;
+            let dataWind;
+            if (units === 'metric') dataWind = `${Math.floor(data1.wind.speed * 3.6)}${speedUnit}`;
+            else dataWind = `${Math.floor(data1.wind.speed)}${speedUnit}`;
             // @ts-ignore
             let dataWeather = `Weather: ${data1.weather[0].main}`;
             previousLatitude = data1.coord.lat;
@@ -579,7 +584,7 @@ locationBtn.onclick = ()=>{
     });
 };
 function locationByCords(lat, long) {
-    let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=imperial&appid=79994613e7af015836a5a0e8225ca668`;
+    let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
     return getWeather(apiCall).then((Response)=>{
         city.innerHTML = Response[0];
         temperature.innerHTML = Response[1];
@@ -588,7 +593,7 @@ function locationByCords(lat, long) {
     });
 }
 function locationByName(input) {
-    let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=imperial&appid=79994613e7af015836a5a0e8225ca668`;
+    let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
     return getWeather(apiCall).then((Response)=>{
         city.innerHTML = Response[0];
         temperature.innerHTML = Response[1];
@@ -606,16 +611,16 @@ darkModeBtn.onclick = (e)=>{
     sunIcon.classList.toggle("hidden");
     moonIcon.classList.toggle("hidden");
 };
-function whichTemperature(input) {
-    if (celsius.checked === true) return `Temperature: ${Math.floor((+input - 32) / 1.8)}°C`;
-    else return `Temperature: ${Math.round(+input)}°F`;
-}
 fahrenheit.onclick = ()=>{
-    //@ts-ignore
+    units = 'imperial';
+    temperatureUnit = 'f';
+    speedUnit = 'mph';
     locationByCords(previousLatitude, previousLongitude);
 };
 celsius.onclick = ()=>{
-    //@ts-ignore
+    units = 'metric';
+    temperatureUnit = 'c';
+    speedUnit = 'kph';
     locationByCords(previousLatitude, previousLongitude);
 };
 
