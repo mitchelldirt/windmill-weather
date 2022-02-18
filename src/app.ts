@@ -7,6 +7,7 @@ const weather = document.getElementById("weather") as HTMLParagraphElement;
 let city = document.getElementById("city") as HTMLHeadingElement;
 let celsius = document.getElementById("celsius") as HTMLInputElement;
 let fahrenheit = document.getElementById("fahrenheit") as HTMLInputElement;
+let dateTime = document.getElementById("dateTime") as HTMLParagraphElement;
 let previousLatitude: string;
 let previousLongitude: string;
 let units = 'imperial';
@@ -33,11 +34,11 @@ async function getWeather(apiCall: string): Promise<any> {
       // @ts-ignore
       let dataWind;
       if (units === 'metric') {
-        dataWind = `${Math.floor((data.wind.speed) * (18/5))}${speedUnit}`;
+        dataWind = `${Math.floor((data.wind.speed) * (18 / 5))}${speedUnit}`;
       } else {
         dataWind = `${Math.floor(data.wind.speed)}${speedUnit}`;
       }
-      
+
       // @ts-ignore
       let dataWeather = `Weather: ${data.weather[0].main}`;
       previousLatitude = data.coord.lat;
@@ -73,6 +74,7 @@ function locationByCords(lat: any, long: any) {
     temperature.innerHTML = Response[1];
     wind.innerHTML = Response[2];
     weather.innerHTML = Response[3];
+    dateTime.innerHTML = getDateTime();
   })
 }
 
@@ -83,6 +85,7 @@ function locationByName(input: HTMLInputElement) {
     temperature.innerHTML = Response[1];
     wind.innerHTML = Response[2];
     weather.innerHTML = Response[3];
+    dateTime.innerHTML = getDateTime();
   })
 };
 
@@ -109,4 +112,12 @@ celsius.onclick = () => {
   temperatureUnit = 'c'
   speedUnit = 'kph'
   locationByCords(previousLatitude, previousLongitude);
+}
+
+function getDateTime(): string {
+  let current = new Date();
+let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
+let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
+let dateTime = cDate + ' ' + cTime;
+return dateTime;
 }

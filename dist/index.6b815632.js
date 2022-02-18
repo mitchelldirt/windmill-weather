@@ -528,6 +528,7 @@ const weather = document.getElementById("weather");
 let city = document.getElementById("city");
 let celsius = document.getElementById("celsius");
 let fahrenheit = document.getElementById("fahrenheit");
+let dateTime = document.getElementById("dateTime");
 let previousLatitude;
 let previousLongitude;
 let units = 'imperial';
@@ -590,6 +591,7 @@ function locationByCords(lat, long) {
         temperature.innerHTML = Response[1];
         wind.innerHTML = Response[2];
         weather.innerHTML = Response[3];
+        dateTime.innerHTML = getDateTime();
     });
 }
 function locationByName(input) {
@@ -599,6 +601,7 @@ function locationByName(input) {
         temperature.innerHTML = Response[1];
         wind.innerHTML = Response[2];
         weather.innerHTML = Response[3];
+        dateTime.innerHTML = getDateTime();
     });
 }
 let sunIcon = document.getElementById("sunIcon");
@@ -623,6 +626,13 @@ celsius.onclick = ()=>{
     speedUnit = 'kph';
     locationByCords(previousLatitude, previousLongitude);
 };
+function getDateTime() {
+    let current = new Date();
+    let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
+    let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
+    let dateTime1 = cDate + ' ' + cTime;
+    return dateTime1;
+}
 
 },{"../dist/output.css":"ffhVg"}],"ffhVg":[function() {},{}]},["g75ug","kuM8f"], "kuM8f", "parcelRequire19c7")
 
