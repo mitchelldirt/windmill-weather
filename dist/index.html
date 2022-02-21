@@ -18,27 +18,27 @@
 
   <form class="flex align-middle mt-3 ml-3" action="">
     <label for="searchBar"></label>
-    <input class="h-5 border-neutral-900 dark:border-neutral-50 border-2 rounded-full py-1 px-1" type="text" name="searchBar" id="searchBar">
+    <input class="h-5 w-64 placeholder:text-xs text-xs border-neutral-900 dark:border-neutral-50 border-2 rounded-full py-1 px-1" type="text" name="searchBar" id="searchBar" placeholder="City, State (If in USA), Country Code (US, UK)">
     <button id="submitBtn" class="rounded-full bg-orange-500 text-white px-2 ml-2 h-5 text-sm text-center">Search</button>
   </form>
 
   <section style="width: 100%;" class="flex">
     <div class="flex flex-col w-2/4 items-center">
       <p class="dark:text-white" id="city"></p>
-      <p id="dateTime">date and time</p>
+      <p class="dark:text-white" id="dateTime">date and time</p>
       <p class="dark:text-white" id="weather"></p>
     </div>
     <div class="flex flex-col w-2/4 items-center">
       <div>
         <form action="">
-          <label for="fahrenheit">Imperial</label>
+          <label class="dark:text-white" for="fahrenheit">Imperial</label>
           <input type="radio" name="temp" id="fahrenheit" value="fahrenheit" checked="">
-          <label for="celcius">Metric</label>
+          <label class="dark:text-white" for="celcius">Metric</label>
           <input type="radio" name="temp" id="celsius" value="celsius">
         </form>
       </div>
       <p class="dark:text-white" id="temperature"></p>
-      <p>Icon for the current weather</p>
+      <p class="dark:text-white">Icon for the current weather</p>
     </div>
   </section>
 
