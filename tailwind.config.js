@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        custom: ['Caveat', 'sans-serif']
+        custom: ['Caveat', 'sans-serif'],
+        std: ['EnceladusDemibold', 'sans-serif']
       }
     },
   },
