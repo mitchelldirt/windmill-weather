@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="">
+<html lang="en" class="font-worksans w-screen h-full">
 
 <head>
   <meta charset="UTF-8" />
@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="input.css">
 </head>
 
-<body class="flex-col flex align-middle items-center justify-center bg-neutral-100 dark:bg-slate-800">
+<body class="min-h-screen m-0 relative bg-neutral-100 dark:bg-slate-800">
+  <main class=" flex items-center justify-center flex-col">
   <div>
     <button id="location"><img class="w-6 h-6" src="./assets/placeholder.png"
         alt="Location pin. Use to get current locations weather"></button>
@@ -31,7 +32,7 @@
   <section style="width: 100%;" class="flex">
     <div class="flex flex-col w-2/4 items-center">
       <p class="dark:text-white" id="city"></p>
-      <p class="dark:text-white font-std" id="dateTime">date and time</p>
+      <p class="dark:text-white font-worksans" id="dateTime">date and time</p>
       <p class="dark:text-white" id="weather"></p>
     </div>
     <div class="flex flex-col w-2/4 items-center">
@@ -54,12 +55,14 @@
     <p class="dark:text-white" id="sunrise">Sunrise: 6:00am</p>
     <p class="dark:text-white" id="sunset">Sunset: 9:00pm</p>
   </div>
-  <footer>
+</main>
+  <footer class="absolute left-0 text-center bottom-0 w-full">
     <div>
-      <p class="dark:text-white">Windmill, location pin, moon, and sun icon created by Freepik</p>
+      <p class="dark:text-white font-serif">Windmill, location pin, moon, and sun icon created by Freepik</p>
     </div>
   </footer>
   <script type="module" src="app.ts"></script>
+
 </body>
 
 </html>

@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         custom: ['Caveat', 'sans-serif'],
-        std: ['EnceladusDemibold', 'sans-serif']
+        worksans: ['Work Sans', 'sans-serif']
       }
     },
   },
