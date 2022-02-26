@@ -15,10 +15,21 @@ let temperatureUnit = 'F';
 let speedUnit = 'mph'
 let data: JSON;
 
+let includeState: RegExp = new RegExp('[a-z,-. ]*, ?[a-z]{2}, ?[a-z]{2}', 'mi');
+let patternMinusState: RegExp = new RegExp('^[a-z-. ]*, ?[a-z]{2}$', 'mi');
+
 submitBtn.onclick = (e) => {
   e.preventDefault();
-  locationByName(searchBar)
+  if (includeState.test(searchBar.value) === true || patternMinusState.test(searchBar.value) === true) {
+    locationByName(searchBar)
+    searchBar.value = "";
+  } else if(searchBar.value === "") {
+    return;
+  }else {
+  alert("ayo stop");
   searchBar.value = "";
+  return;
+}
 };
 
 async function getWeather(apiCall: string): Promise<any> {
@@ -54,7 +65,7 @@ async function getWeather(apiCall: string): Promise<any> {
 }
 
 window.onload = () => {
-  searchBar.value = "Amsterdam";
+  searchBar.value = "Amsterdam, NL";
   submitBtn.click();
   searchBar.value = "";
 }
@@ -116,8 +127,8 @@ celsius.onclick = () => {
 
 function getDateTime(): string {
   let current = new Date();
-let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
-let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
-let dateTime = cDate + ' ' + cTime;
-return dateTime;
+  let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
+  let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
+  let dateTime = cDate + ' ' + cTime;
+  return dateTime;
 }

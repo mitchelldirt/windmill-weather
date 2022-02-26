@@ -535,10 +535,19 @@ let units = 'imperial';
 let temperatureUnit = 'F';
 let speedUnit = 'mph';
 let data;
+let includeState = new RegExp('[a-z,-. ]*, ?[a-z]{2}, ?[a-z]{2}', 'mi');
+let patternMinusState = new RegExp('^[a-z-. ]*, ?[a-z]{2}$', 'mi');
 submitBtn.onclick = (e)=>{
     e.preventDefault();
-    locationByName(searchBar);
-    searchBar.value = "";
+    if (includeState.test(searchBar.value) === true || patternMinusState.test(searchBar.value) === true) {
+        locationByName(searchBar);
+        searchBar.value = "";
+    } else if (searchBar.value === "") return;
+    else {
+        alert("ayo stop");
+        searchBar.value = "";
+        return;
+    }
 };
 async function getWeather(apiCall) {
     try {
@@ -574,7 +583,7 @@ async function getWeather(apiCall) {
     }
 }
 window.onload = ()=>{
-    searchBar.value = "Amsterdam";
+    searchBar.value = "Amsterdam, NL";
     submitBtn.click();
     searchBar.value = "";
 };

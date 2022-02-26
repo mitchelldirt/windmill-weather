@@ -480,12 +480,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   position: relative;
 }
 
-.bottom-0{
-  bottom: 0px;
-}
-
 .left-0{
   left: 0px;
+}
+
+.bottom-0{
+  bottom: 0px;
 }
 
 .m-0{
@@ -524,8 +524,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: none;
 }
 
-.h-screen{
-  height: 100vh;
+.h-full{
+  height: 100%;
 }
 
 .h-6{
@@ -534,14 +534,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .h-5{
   height: 1.25rem;
-}
-
-.h-full{
-  height: 100%;
-}
-
-.min-h-full{
-  min-height: 100%;
 }
 
 .min-h-screen{
@@ -643,14 +635,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 2.25rem;
 }
 
-.text-xs{
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
 .text-sm{
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+
+.text-xs{
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .font-bold{
@@ -665,21 +657,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.placeholder\:text-xs::-moz-placeholder{
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.placeholder\:text-xs:-ms-input-placeholder{
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.placeholder\:text-xs::placeholder{
-  font-size: 0.75rem;
-  line-height: 1rem;
 }
 
 .dark .dark\:border-neutral-50{
