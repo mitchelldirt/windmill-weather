@@ -1,4 +1,7 @@
 import "../dist/output.css"
+import { fromUnixTime } from 'date-fns'
+
+
 const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement;
 const searchBar = document.getElementById("searchBar") as HTMLInputElement;
 const temperature = document.getElementById("temperature") as HTMLParagraphElement;
@@ -26,8 +29,11 @@ submitBtn.onclick = (e) => {
   } else if(searchBar.value === "") {
     return;
   }else {
-  alert("ayo stop");
+  document.getElementById("searchAlert")?.classList.toggle("hidden");
   searchBar.value = "";
+  setTimeout(() => {
+    document.getElementById("searchAlert")?.classList.toggle("hidden");
+  }, 5000);
   return;
 }
 };
@@ -43,14 +49,18 @@ async function getWeather(apiCall: string): Promise<any> {
       // @ts-ignore
       let dataTemp = `${Math.floor(data.main.temp)}°${temperatureUnit}`;
       // @ts-ignore
-      let dataWind;
+      let dataWind: string;
       if (units === 'metric') {
         dataWind = `${Math.floor((data.wind.speed) * (18 / 5))}${speedUnit}`;
       } else {
         dataWind = `${Math.floor(data.wind.speed)}${speedUnit}`;
       }
 
-      // @ts-ignore
+      let dataSunrise = fromUnixTime(data.sys.sunrise)
+      let dataSunset = fromUnixTime(data.sys.sunset)
+console.log(dataSunrise)
+console.log(dataSunset)
+// @ts-ignore
       let dataWeather = `Weather: ${data.weather[0].main}`;
       previousLatitude = data.coord.lat;
       previousLongitude = data.coord.lon;
