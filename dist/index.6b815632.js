@@ -569,19 +569,21 @@ async function getWeather(apiCall) {
             let dataWind;
             if (units === 'metric') dataWind = `${Math.floor(data1.wind.speed * 3.6)}${speedUnit}`;
             else dataWind = `${Math.floor(data1.wind.speed)}${speedUnit}`;
-            let dataSunrise = _dateFns.fromUnixTime(data1.sys.sunrise);
-            let dataSunset = _dateFns.fromUnixTime(data1.sys.sunset);
-            console.log(dataSunrise);
-            console.log(dataSunset);
+            const currentDateTime = accurateTime(data1.timezone, data1.dt);
+            const sunrise = accurateTime(data1.timezone, data1.sys.sunrise);
+            const sunset = accurateTime(data1.timezone, data1.sys.sunset);
             // @ts-ignore
             let dataWeather = `Weather: ${data1.weather[0].main}`;
             previousLatitude = data1.coord.lat;
             previousLongitude = data1.coord.lon;
             return [
+                currentDateTime,
                 dataCity,
                 dataTemp,
                 dataWind,
-                dataWeather
+                dataWeather,
+                sunrise,
+                sunset
             ];
         }
     } catch (err) {
@@ -608,7 +610,7 @@ function locationByCords(lat, long) {
         temperature.innerHTML = Response[1];
         wind.innerHTML = Response[2];
         weather.innerHTML = Response[3];
-        dateTime.innerHTML = getDateTime();
+        dateTime.innerHTML = Response[4];
     });
 }
 function locationByName(input) {
@@ -649,6 +651,14 @@ function getDateTime() {
     let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
     let dateTime1 = cDate + ' ' + cTime;
     return dateTime1;
+}
+function accurateTime(timeZoneOffset, unixTime) {
+    const localDate = new Date();
+    let localDiff = localDate.getTimezoneOffset();
+    let totalDiffUnix = (timeZoneOffset / 60 + localDiff) * 60;
+    let date = _dateFns.fromUnixTime(unixTime + totalDiffUnix).toString().slice(0, 10);
+    let time = _dateFns.fromUnixTime(unixTime + totalDiffUnix).toString().slice(16, 21);
+    return `${date} ${time}`;
 }
 
 },{"../dist/output.css":"ffhVg","date-fns":"9yHCA"}],"ffhVg":[function() {},{}],"9yHCA":[function(require,module,exports) {

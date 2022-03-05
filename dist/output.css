@@ -508,20 +508,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: 0.75rem;
 }
 
+.mb-1{
+  margin-bottom: 0.25rem;
+}
+
 .ml-2{
   margin-left: 0.5rem;
 }
 
 .mt-2{
   margin-top: 0.5rem;
-}
-
-.mb-2{
-  margin-bottom: 0.5rem;
-}
-
-.mb-1{
-  margin-bottom: 0.25rem;
 }
 
 .flex{
@@ -673,11 +669,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-blue-600{
-  --tw-text-opacity: 1;
-  color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
 .text-black{

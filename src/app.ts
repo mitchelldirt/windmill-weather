@@ -1,5 +1,5 @@
 import "../dist/output.css"
-import { fromUnixTime } from 'date-fns'
+import { fromUnixTime, getUnixTime } from 'date-fns'
 
 
 const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement;
@@ -56,15 +56,14 @@ async function getWeather(apiCall: string): Promise<any> {
         dataWind = `${Math.floor(data.wind.speed)}${speedUnit}`;
       }
 
-      let dataSunrise = fromUnixTime(data.sys.sunrise)
-      let dataSunset = fromUnixTime(data.sys.sunset)
-console.log(dataSunrise)
-console.log(dataSunset)
+const currentDateTime = accurateTime(data.timezone, data.dt);
+const sunrise = accurateTime(data.timezone, data.sys.sunrise);
+const sunset = accurateTime(data.timezone, data.sys.sunset);
 // @ts-ignore
       let dataWeather = `Weather: ${data.weather[0].main}`;
       previousLatitude = data.coord.lat;
       previousLongitude = data.coord.lon;
-      return [dataCity, dataTemp, dataWind, dataWeather];
+      return [currentDateTime, dataCity, dataTemp, dataWind, dataWeather, sunrise, sunset];
     }
   }
   catch (err) {
@@ -95,7 +94,7 @@ function locationByCords(lat: any, long: any) {
     temperature.innerHTML = Response[1];
     wind.innerHTML = Response[2];
     weather.innerHTML = Response[3];
-    dateTime.innerHTML = getDateTime();
+    dateTime.innerHTML = Response[4];
   })
 }
 
@@ -141,4 +140,17 @@ function getDateTime(): string {
   let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
   let dateTime = cDate + ' ' + cTime;
   return dateTime;
+}
+
+function accurateTime(timeZoneOffset: number, unixTime: number): string {
+  const localDate = new Date();
+  let localDiff = localDate.getTimezoneOffset();
+
+  let totalDiffUnix = (((timeZoneOffset / 60) + localDiff) * 60);
+
+  let date = fromUnixTime(unixTime + totalDiffUnix).toString().slice(0, 10);
+  let time = fromUnixTime(unixTime + totalDiffUnix).toString().slice(16, 21);
+
+
+  return `${date} ${time}`
 }
