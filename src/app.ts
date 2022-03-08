@@ -13,6 +13,7 @@ let fahrenheit = document.getElementById("fahrenheit") as HTMLInputElement;
 let dateTime = document.getElementById("dateTime") as HTMLParagraphElement;
 let sunrise = document.getElementById("sunrise") as HTMLParagraphElement;
 let sunset = document.getElementById("sunset") as HTMLParagraphElement;
+let humidity = document.getElementById("humidity") as HTMLParagraphElement;
 let previousLatitude: string;
 let previousLongitude: string;
 let units = 'imperial';
@@ -51,9 +52,10 @@ async function getWeather(apiCall: string): Promise<any> {
       // @ts-ignore
       let dataTemp = `${Math.floor(data.main.temp)}°${temperatureUnit}`;
       // @ts-ignore
-      const currentDateTime = await accurateTime(data.timezone, data.dt);
-      const sunriseTime = await accurateTime(data.timezone, data.sys.sunrise);
-      const sunsetTime = await accurateTime(data.timezone, data.sys.sunset);
+      const currentDateTime = await accurateTime(data.timezone, data.dt)
+      const sunriseTime = "Sunrise: " + await (await accurateTime(data.timezone, data.sys.sunrise)).slice(11, 16);
+      const sunsetTime = "Sunset: " + await (await accurateTime(data.timezone, data.sys.sunset)).slice(11, 16);
+let humidityPercent = `Humidity: ${data.main.humidity}%`
       let dataWind: string;
       if (units === 'metric') {
         dataWind = `${Math.floor((data.wind.speed) * (18 / 5))}${speedUnit}`;
@@ -65,7 +67,7 @@ async function getWeather(apiCall: string): Promise<any> {
       let dataWeather = `Weather: ${data.weather[0].main}`;
       previousLatitude = data.coord.lat;
       previousLongitude = data.coord.lon;
-      return [currentDateTime, dataCity, dataTemp, dataWind, dataWeather, sunriseTime, sunsetTime];
+      return [currentDateTime, dataCity, dataTemp, dataWind, dataWeather, sunriseTime, sunsetTime, humidityPercent];
     }
   }
   catch (err) {
@@ -100,6 +102,7 @@ function locationByCords(lat: any, long: any) {
     dateTime.innerHTML = Response[0];
     sunrise.innerHTML = Response[5]
     sunset.innerHTML = Response[6]
+    humidity.innerHTML = Response[7];
   })
 }
 
@@ -113,6 +116,7 @@ function locationByName(input: HTMLInputElement) {
     dateTime.innerHTML = Response[0];
     sunrise.innerHTML = Response[5]
     sunset.innerHTML = Response[6]
+    humidity.innerHTML = Response[7];
   })
 };
 

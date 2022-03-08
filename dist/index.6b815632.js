@@ -532,6 +532,7 @@ let fahrenheit = document.getElementById("fahrenheit");
 let dateTime = document.getElementById("dateTime");
 let sunrise = document.getElementById("sunrise");
 let sunset = document.getElementById("sunset");
+let humidity = document.getElementById("humidity");
 let previousLatitude;
 let previousLongitude;
 let units = 'imperial';
@@ -569,8 +570,9 @@ async function getWeather(apiCall) {
             let dataTemp = `${Math.floor(data1.main.temp)}°${temperatureUnit}`;
             // @ts-ignore
             const currentDateTime = await accurateTime(data1.timezone, data1.dt);
-            const sunriseTime = await accurateTime(data1.timezone, data1.sys.sunrise);
-            const sunsetTime = await accurateTime(data1.timezone, data1.sys.sunset);
+            const sunriseTime = "Sunrise: " + await (await accurateTime(data1.timezone, data1.sys.sunrise)).slice(11, 16);
+            const sunsetTime = "Sunset: " + await (await accurateTime(data1.timezone, data1.sys.sunset)).slice(11, 16);
+            let humidityPercent = `Humidity: ${data1.main.humidity}%`;
             let dataWind;
             if (units === 'metric') dataWind = `${Math.floor(data1.wind.speed * 3.6)}${speedUnit}`;
             else dataWind = `${Math.floor(data1.wind.speed)}${speedUnit}`;
@@ -585,7 +587,8 @@ async function getWeather(apiCall) {
                 dataWind,
                 dataWeather,
                 sunriseTime,
-                sunsetTime
+                sunsetTime,
+                humidityPercent
             ];
         }
     } catch (err) {
@@ -616,6 +619,7 @@ function locationByCords(lat, long) {
         dateTime.innerHTML = Response[0];
         sunrise.innerHTML = Response[5];
         sunset.innerHTML = Response[6];
+        humidity.innerHTML = Response[7];
     });
 }
 function locationByName(input) {
@@ -628,6 +632,7 @@ function locationByName(input) {
         dateTime.innerHTML = Response[0];
         sunrise.innerHTML = Response[5];
         sunset.innerHTML = Response[6];
+        humidity.innerHTML = Response[7];
     });
 }
 let sunIcon = document.getElementById("sunIcon");
