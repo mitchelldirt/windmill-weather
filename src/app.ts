@@ -11,6 +11,8 @@ let city = document.getElementById("city") as HTMLHeadingElement;
 let celsius = document.getElementById("celsius") as HTMLInputElement;
 let fahrenheit = document.getElementById("fahrenheit") as HTMLInputElement;
 let dateTime = document.getElementById("dateTime") as HTMLParagraphElement;
+let sunrise = document.getElementById("sunrise") as HTMLParagraphElement;
+let sunset = document.getElementById("sunset") as HTMLParagraphElement;
 let previousLatitude: string;
 let previousLongitude: string;
 let units = 'imperial';
@@ -26,16 +28,16 @@ submitBtn.onclick = (e) => {
   if (includeState.test(searchBar.value) === true || patternMinusState.test(searchBar.value) === true) {
     locationByName(searchBar)
     searchBar.value = "";
-  } else if(searchBar.value === "") {
+  } else if (searchBar.value === "") {
     return;
-  }else {
-  document.getElementById("searchAlert")?.classList.toggle("hidden");
-  searchBar.value = "";
-  setTimeout(() => {
+  } else {
     document.getElementById("searchAlert")?.classList.toggle("hidden");
-  }, 5000);
-  return;
-}
+    searchBar.value = "";
+    setTimeout(() => {
+      document.getElementById("searchAlert")?.classList.toggle("hidden");
+    }, 5000);
+    return;
+  }
 };
 
 async function getWeather(apiCall: string): Promise<any> {
@@ -49,6 +51,9 @@ async function getWeather(apiCall: string): Promise<any> {
       // @ts-ignore
       let dataTemp = `${Math.floor(data.main.temp)}°${temperatureUnit}`;
       // @ts-ignore
+      const currentDateTime = await accurateTime(data.timezone, data.dt);
+      const sunriseTime = await accurateTime(data.timezone, data.sys.sunrise);
+      const sunsetTime = await accurateTime(data.timezone, data.sys.sunset);
       let dataWind: string;
       if (units === 'metric') {
         dataWind = `${Math.floor((data.wind.speed) * (18 / 5))}${speedUnit}`;
@@ -56,14 +61,11 @@ async function getWeather(apiCall: string): Promise<any> {
         dataWind = `${Math.floor(data.wind.speed)}${speedUnit}`;
       }
 
-const currentDateTime = accurateTime(data.timezone, data.dt);
-const sunrise = accurateTime(data.timezone, data.sys.sunrise);
-const sunset = accurateTime(data.timezone, data.sys.sunset);
-// @ts-ignore
+      // @ts-ignore
       let dataWeather = `Weather: ${data.weather[0].main}`;
       previousLatitude = data.coord.lat;
       previousLongitude = data.coord.lon;
-      return [currentDateTime, dataCity, dataTemp, dataWind, dataWeather, sunrise, sunset];
+      return [currentDateTime, dataCity, dataTemp, dataWind, dataWeather, sunriseTime, sunsetTime];
     }
   }
   catch (err) {
@@ -90,22 +92,27 @@ locationBtn.onclick = () => {
 function locationByCords(lat: any, long: any) {
   let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`
   return getWeather(apiCall).then(Response => {
-    city.innerHTML = Response[0];
-    temperature.innerHTML = Response[1];
-    wind.innerHTML = Response[2];
-    weather.innerHTML = Response[3];
-    dateTime.innerHTML = Response[4];
+    console.log(Response[0])
+    city.innerHTML = Response[1];
+    temperature.innerHTML = Response[2];
+    wind.innerHTML = Response[3];
+    weather.innerHTML = Response[4];
+    dateTime.innerHTML = Response[0];
+    sunrise.innerHTML = Response[5]
+    sunset.innerHTML = Response[6]
   })
 }
 
 function locationByName(input: HTMLInputElement) {
   let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
   return getWeather(apiCall).then(Response => {
-    city.innerHTML = Response[0];
-    temperature.innerHTML = Response[1];
-    wind.innerHTML = Response[2];
-    weather.innerHTML = Response[3];
-    dateTime.innerHTML = getDateTime();
+    city.innerHTML = Response[1];
+    temperature.innerHTML = Response[2];
+    wind.innerHTML = Response[3];
+    weather.innerHTML = Response[4];
+    dateTime.innerHTML = Response[0];
+    sunrise.innerHTML = Response[5]
+    sunset.innerHTML = Response[6]
   })
 };
 
@@ -142,7 +149,7 @@ function getDateTime(): string {
   return dateTime;
 }
 
-function accurateTime(timeZoneOffset: number, unixTime: number): string {
+async function accurateTime(timeZoneOffset: number, unixTime: number): Promise<string> {
   const localDate = new Date();
   let localDiff = localDate.getTimezoneOffset();
 

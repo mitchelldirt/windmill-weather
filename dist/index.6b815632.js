@@ -530,6 +530,8 @@ let city = document.getElementById("city");
 let celsius = document.getElementById("celsius");
 let fahrenheit = document.getElementById("fahrenheit");
 let dateTime = document.getElementById("dateTime");
+let sunrise = document.getElementById("sunrise");
+let sunset = document.getElementById("sunset");
 let previousLatitude;
 let previousLongitude;
 let units = 'imperial';
@@ -566,12 +568,12 @@ async function getWeather(apiCall) {
             // @ts-ignore
             let dataTemp = `${Math.floor(data1.main.temp)}°${temperatureUnit}`;
             // @ts-ignore
+            const currentDateTime = await accurateTime(data1.timezone, data1.dt);
+            const sunriseTime = await accurateTime(data1.timezone, data1.sys.sunrise);
+            const sunsetTime = await accurateTime(data1.timezone, data1.sys.sunset);
             let dataWind;
             if (units === 'metric') dataWind = `${Math.floor(data1.wind.speed * 3.6)}${speedUnit}`;
             else dataWind = `${Math.floor(data1.wind.speed)}${speedUnit}`;
-            const currentDateTime = accurateTime(data1.timezone, data1.dt);
-            const sunrise = accurateTime(data1.timezone, data1.sys.sunrise);
-            const sunset = accurateTime(data1.timezone, data1.sys.sunset);
             // @ts-ignore
             let dataWeather = `Weather: ${data1.weather[0].main}`;
             previousLatitude = data1.coord.lat;
@@ -582,8 +584,8 @@ async function getWeather(apiCall) {
                 dataTemp,
                 dataWind,
                 dataWeather,
-                sunrise,
-                sunset
+                sunriseTime,
+                sunsetTime
             ];
         }
     } catch (err) {
@@ -606,21 +608,26 @@ locationBtn.onclick = ()=>{
 function locationByCords(lat, long) {
     let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
     return getWeather(apiCall).then((Response)=>{
-        city.innerHTML = Response[0];
-        temperature.innerHTML = Response[1];
-        wind.innerHTML = Response[2];
-        weather.innerHTML = Response[3];
-        dateTime.innerHTML = Response[4];
+        console.log(Response[0]);
+        city.innerHTML = Response[1];
+        temperature.innerHTML = Response[2];
+        wind.innerHTML = Response[3];
+        weather.innerHTML = Response[4];
+        dateTime.innerHTML = Response[0];
+        sunrise.innerHTML = Response[5];
+        sunset.innerHTML = Response[6];
     });
 }
 function locationByName(input) {
     let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
     return getWeather(apiCall).then((Response)=>{
-        city.innerHTML = Response[0];
-        temperature.innerHTML = Response[1];
-        wind.innerHTML = Response[2];
-        weather.innerHTML = Response[3];
-        dateTime.innerHTML = getDateTime();
+        city.innerHTML = Response[1];
+        temperature.innerHTML = Response[2];
+        wind.innerHTML = Response[3];
+        weather.innerHTML = Response[4];
+        dateTime.innerHTML = Response[0];
+        sunrise.innerHTML = Response[5];
+        sunset.innerHTML = Response[6];
     });
 }
 let sunIcon = document.getElementById("sunIcon");
@@ -652,7 +659,7 @@ function getDateTime() {
     let dateTime1 = cDate + ' ' + cTime;
     return dateTime1;
 }
-function accurateTime(timeZoneOffset, unixTime) {
+async function accurateTime(timeZoneOffset, unixTime) {
     const localDate = new Date();
     let localDiff = localDate.getTimezoneOffset();
     let totalDiffUnix = (timeZoneOffset / 60 + localDiff) * 60;
