@@ -27,14 +27,14 @@
         <input class="h-5 w-64 text-xs border-neutral-900 dark:border-neutral-50 border-2 rounded-full py-1 px-1"
           type="text" name="searchBar" id="searchBar" style="font-size: .1rem"
           placeholder="City, State: MI, FL, CN: US, UK">
-          <button id="submitBtn"
+        <button id="submitBtn"
           class="rounded-full bg-orange-500 text-white px-2 ml-2 h-5 text-sm text-center">Search</button>
-        </div>
-          <span id="searchAlert" class="text-xs bg-orange-500 rounded-full text-black dark:text-white p-1 hidden">
-            Please format: City, State Code (MI), Country Code (US)
-          </span>
-      
-      
+      </div>
+      <span id="searchAlert" class="text-xs bg-orange-500 rounded-full text-black dark:text-white p-1 hidden">
+        Please format: City, State Code (MI), Country Code (US)
+      </span>
+
+
     </form>
 
     <section style="width: 100%;" class="flex">
@@ -62,6 +62,25 @@
       <p class="dark:text-white" id="humidity"></p>
       <p class="dark:text-white" id="sunrise"></p>
       <p class="dark:text-white" id="sunset"></p>
+    </div>
+    <div class="flex justify-center mt-8">
+      <label class="relative flex justify-between items-center group p-2 text-xl">
+        <p>Hourly</p>
+        <input type="checkbox"
+          class="absolute left-1/2 -translate-x-1/2 w-full h-full peer appearance-none rounded-md" />
+        <span
+          class="w-16 h-10 flex items-center flex-shrink-0 ml-4 p-1 bg-orange-500 rounded-full duration-300 ease-in-out peer-checked:bg-blue-500 after:w-8 after:h-8 after:bg-white after:rounded-full after:shadow-md after:duration-300 peer-checked:after:translate-x-6 group-hover:after:translate-x-1"></span>
+        <p class="ml-4">Daily</p>
+      </label>
+    </div>
+     
+    <div class="flex flex-col md:flex-row items-center gap-3 md:justify-around flex-wrap w-full mt-8">
+      <div class="border-4 border-black w-3/4 md:w-1/6 h-80"></div>
+      <div class="border-4 border-black w-3/4 md:w-1/6 h-80"></div>
+      <div class="border-4 border-black w-3/4 md:w-1/6 h-80"></div>
+      <div class="border-4 border-black w-3/4 md:w-1/6 h-80"></div>
+      <div class="border-4 border-black w-3/4 md:w-1/6 h-80"></div>
+      </div>
     </div>
   </main>
   <footer class="absolute left-0 text-center bottom-0 w-full">
