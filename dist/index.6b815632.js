@@ -533,6 +533,7 @@ let dateTime = document.getElementById("dateTime");
 let sunrise = document.getElementById("sunrise");
 let sunset = document.getElementById("sunset");
 let humidity = document.getElementById("humidity");
+const hourlyDailyToggle = document.getElementById("hourlyDailyToggle");
 let previousLatitude;
 let previousLongitude;
 let units = 'imperial';
@@ -580,6 +581,7 @@ async function getWeather(apiCall) {
             let dataWeather = `Weather: ${data1.weather[0].main}`;
             previousLatitude = data1.coord.lat;
             previousLongitude = data1.coord.lon;
+            oneCall(previousLatitude, previousLongitude);
             return [
                 currentDateTime,
                 dataCity,
@@ -623,7 +625,8 @@ function locationByCords(lat, long) {
     });
 }
 function locationByName(input) {
-    let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
+    let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=${units}&appid=6a9b62a8dc1c79ef3c28a15de1a5634a
+  `;
     return getWeather(apiCall).then((Response)=>{
         city.innerHTML = Response[1];
         temperature.innerHTML = Response[2];
@@ -671,6 +674,49 @@ async function accurateTime(timeZoneOffset, unixTime) {
     let date = _dateFns.fromUnixTime(unixTime + totalDiffUnix).toString().slice(0, 10);
     let time = _dateFns.fromUnixTime(unixTime + totalDiffUnix).toString().slice(16, 21);
     return `${date} ${time}`;
+}
+async function oneCallDaily(lat, lon) {
+    try {
+        let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, {
+            mode: "cors"
+        });
+        if (output.status === 200) {
+            let data2 = await output.json();
+            console.log(data2);
+            let timeOrDay = document.getElementsByClassName("timeOrDay");
+            for (let element of timeOrDay)element.innerHTML = data2.daily[0].wind_gust;
+            return data2;
+        }
+    } catch (err) {
+        console.log(err);
+        // error function or default location
+        return err;
+    }
+}
+async function oneCallHourly(lat, lon) {
+    try {
+        let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, {
+            mode: "cors"
+        });
+        if (output.status === 200) {
+            let data3 = await output.json();
+            console.log(data3);
+            let timeOrDay = document.getElementsByClassName("timeOrDay");
+            for (let element of timeOrDay)element.innerHTML = data3.hourly[1].weather[0].main;
+            return data3;
+        }
+    } catch (err) {
+        console.log(err);
+        // error function or default location
+        return err;
+    }
+}
+hourlyDailyToggle.onclick = ()=>{
+    oneCall(previousLatitude, previousLongitude);
+};
+function oneCall(lat, lon) {
+    if (hourlyDailyToggle.checked == true) oneCallDaily(lat, lon);
+    else oneCallHourly(lat, lon);
 }
 
 },{"../dist/output.css":"ffhVg","date-fns":"9yHCA"}],"ffhVg":[function() {},{}],"9yHCA":[function(require,module,exports) {

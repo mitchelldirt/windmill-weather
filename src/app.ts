@@ -14,6 +14,7 @@ let dateTime = document.getElementById("dateTime") as HTMLParagraphElement;
 let sunrise = document.getElementById("sunrise") as HTMLParagraphElement;
 let sunset = document.getElementById("sunset") as HTMLParagraphElement;
 let humidity = document.getElementById("humidity") as HTMLParagraphElement;
+const hourlyDailyToggle = document.getElementById("hourlyDailyToggle") as HTMLInputElement;
 let previousLatitude: string;
 let previousLongitude: string;
 let units = 'imperial';
@@ -67,6 +68,7 @@ let humidityPercent = `Humidity: ${data.main.humidity}%`
       let dataWeather = `Weather: ${data.weather[0].main}`;
       previousLatitude = data.coord.lat;
       previousLongitude = data.coord.lon;
+      oneCall(previousLatitude, previousLongitude);
       return [currentDateTime, dataCity, dataTemp, dataWind, dataWeather, sunriseTime, sunsetTime, humidityPercent];
     }
   }
@@ -107,7 +109,8 @@ function locationByCords(lat: any, long: any) {
 }
 
 function locationByName(input: HTMLInputElement) {
-  let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
+  let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=${units}&appid=6a9b62a8dc1c79ef3c28a15de1a5634a
+  `;
   return getWeather(apiCall).then(Response => {
     city.innerHTML = Response[1];
     temperature.innerHTML = Response[2];
@@ -164,4 +167,56 @@ async function accurateTime(timeZoneOffset: number, unixTime: number): Promise<s
 
 
   return `${date} ${time}`
+}
+
+async function oneCallDaily(lat: string, lon: string): Promise<any> {
+  try {
+    let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, { mode: "cors" });
+    if (output.status === 200) {
+      let data = await output.json();
+      console.log(data)
+      let timeOrDay = document.getElementsByClassName("timeOrDay");
+
+      for (let element of timeOrDay) {
+        element.innerHTML = data.daily[0].wind_gust;
+      }
+      return data;
+}
+  } catch (err) {
+    console.log(err)
+    // error function or default location
+    return err;
+  }
+}
+
+async function oneCallHourly(lat: string, lon: string): Promise<any> {
+  try {
+    let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, { mode: "cors" });
+    if (output.status === 200) {
+      let data = await output.json();
+      console.log(data)
+      let timeOrDay = document.getElementsByClassName("timeOrDay");
+
+      for (let element of timeOrDay) {
+        element.innerHTML = data.hourly[1].weather[0].main;
+      }
+      return data;
+}
+  } catch (err) {
+    console.log(err)
+    // error function or default location
+    return err;
+  }
+}
+
+hourlyDailyToggle.onclick = () => {
+  oneCall(previousLatitude, previousLongitude);
+}
+
+function oneCall(lat: string, lon: string): void {
+  if (hourlyDailyToggle.checked == true) {
+    oneCallDaily(lat, lon);
+  } else {
+    oneCallHourly(lat, lon);
+  }
 }
