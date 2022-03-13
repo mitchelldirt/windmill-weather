@@ -534,6 +534,7 @@ let sunrise = document.getElementById("sunrise");
 let sunset = document.getElementById("sunset");
 let humidity = document.getElementById("humidity");
 const hourlyDailyToggle = document.getElementById("hourlyDailyToggle");
+let currentWeatherIcon = document.getElementById("currentWeatherIcon");
 let previousLatitude;
 let previousLongitude;
 let units = 'imperial';
@@ -571,12 +572,12 @@ async function getWeather(apiCall) {
             let dataTemp = `${Math.floor(data1.main.temp)}°${temperatureUnit}`;
             // @ts-ignore
             const currentDateTime = await accurateTime(data1.timezone, data1.dt);
-            const sunriseTime = "Sunrise: " + await (await accurateTime(data1.timezone, data1.sys.sunrise)).slice(11, 16);
-            const sunsetTime = "Sunset: " + await (await accurateTime(data1.timezone, data1.sys.sunset)).slice(11, 16);
-            let humidityPercent = `Humidity: ${data1.main.humidity}%`;
+            const sunriseTime = "⬆️☀️  Sunrise: " + await (await accurateTime(data1.timezone, data1.sys.sunrise)).slice(11, 16);
+            const sunsetTime = "⬇️☀️  Sunset: " + await (await accurateTime(data1.timezone, data1.sys.sunset)).slice(11, 16);
+            let humidityPercent = `🥵  Humidity: ${data1.main.humidity}%`;
             let dataWind;
-            if (units === 'metric') dataWind = `${Math.floor(data1.wind.speed * 3.6)}${speedUnit}`;
-            else dataWind = `${Math.floor(data1.wind.speed)}${speedUnit}`;
+            if (units === 'metric') dataWind = `🌬️  ${Math.floor(data1.wind.speed * 3.6)}${speedUnit}`;
+            else dataWind = `🌬️  ${Math.floor(data1.wind.speed)}${speedUnit}`;
             // @ts-ignore
             let dataWeather = `Weather: ${data1.weather[0].main}`;
             previousLatitude = data1.coord.lat;
@@ -618,6 +619,7 @@ function locationByCords(lat, long) {
         temperature.innerHTML = Response[2];
         wind.innerHTML = Response[3];
         weather.innerHTML = Response[4];
+        currentWeatherIcon.innerHTML = weatherEmojis(Response[4]);
         dateTime.innerHTML = Response[0];
         sunrise.innerHTML = Response[5];
         sunset.innerHTML = Response[6];
@@ -632,6 +634,7 @@ function locationByName(input) {
         temperature.innerHTML = Response[2];
         wind.innerHTML = Response[3];
         weather.innerHTML = Response[4];
+        currentWeatherIcon.innerHTML = weatherEmojis(Response[4].slice(9));
         dateTime.innerHTML = Response[0];
         sunrise.innerHTML = Response[5];
         sunset.innerHTML = Response[6];
@@ -650,13 +653,13 @@ darkModeBtn.onclick = (e)=>{
 };
 fahrenheit.onclick = ()=>{
     units = 'imperial';
-    temperatureUnit = 'f';
+    temperatureUnit = 'F';
     speedUnit = 'mph';
     locationByCords(previousLatitude, previousLongitude);
 };
 celsius.onclick = ()=>{
     units = 'metric';
-    temperatureUnit = 'c';
+    temperatureUnit = 'C';
     speedUnit = 'kph';
     locationByCords(previousLatitude, previousLongitude);
 };
@@ -676,6 +679,11 @@ async function accurateTime(timeZoneOffset, unixTime) {
     return `${date} ${time}`;
 }
 hourlyDailyToggle.onclick = ()=>{
+    if (hourlyDailyToggle.checked == false) {
+        // Gets rid of the low temp which should be hidden on the hourly display :)
+        let lowTemps = document.getElementsByClassName("lowTemp");
+        for (let element of lowTemps)if (hourlyDailyToggle.checked == false) element.classList.toggle("hidden");
+    }
     oneCall(previousLatitude, previousLongitude);
 };
 function oneCall(lat, lon) {
@@ -691,10 +699,22 @@ async function oneCallDaily(lat, lon) {
             let data2 = await output.json();
             console.log(data2);
             let timeOrDay = document.getElementsByClassName("timeOrDay");
+            let highTemps = document.getElementsByClassName("highTemp");
+            let lowTemps = document.getElementsByClassName("lowTemp");
+            let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
             for(let i = 0; i < timeOrDay.length; i++){
                 let day = await accurateTime(data2.timezone_offset, data2.daily[i + 1].dt);
                 timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")));
             }
+            for(let i1 = 0; i1 < highTemps.length; i1++){
+                let day = await accurateTime(data2.timezone_offset, data2.daily[i1 + 1].dt);
+                highTemps[i1].innerHTML = `⬆️  ${Math.floor(data2.daily[i1 + 1].temp.max)}°${temperatureUnit}`;
+            }
+            for(let i2 = 0; i2 < lowTemps.length; i2++){
+                lowTemps[i2].classList.toggle("hidden");
+                lowTemps[i2].innerHTML = `⬇️  ${Math.floor(data2.daily[i2 + 1].temp.min)}°${temperatureUnit}`;
+            }
+            for(let i3 = 0; i3 < weatherIcons.length; i3++)weatherIcons[i3].innerHTML = weatherEmojis(data2.daily[i3 + 1].weather[0].main);
             return data2;
         }
     } catch (err) {
@@ -712,10 +732,14 @@ async function oneCallHourly(lat, lon) {
             let data3 = await output.json();
             console.log(data3);
             let timeOrDay = document.getElementsByClassName("timeOrDay");
+            let temps = document.getElementsByClassName("highTemp");
+            let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
             for(let i = 0; i < timeOrDay.length; i++){
                 let hour = await accurateTime(data3.timezone_offset, data3.hourly[i + 1].dt);
                 timeOrDay[i].innerHTML = hour.slice(11, 16);
             }
+            for(let i4 = 0; i4 < temps.length; i4++)temps[i4].innerHTML = `${Math.floor(data3.hourly[i4 + 1].temp)}°${temperatureUnit}`;
+            for(let i5 = 0; i5 < weatherIcons.length; i5++)weatherIcons[i5].innerHTML = weatherEmojis(data3.hourly[i5 + 1].weather[0].main);
             return data3;
         }
     } catch (err) {
@@ -742,6 +766,27 @@ function daysOfTheWeek(abb) {
             return "Sunday";
     }
     return "undefined";
+}
+function weatherEmojis(weather1) {
+    switch(weather1){
+        case "Thunderstorm":
+            return "⛈️";
+        case "Drizzle":
+            return "🌧️";
+        case "Rain":
+            return "☔";
+        case "Snow":
+            return "🌨️";
+        case "Atmosphere":
+            return "🌫️";
+        case "Clear":
+            let currentTime = new Date().getHours();
+            if (currentTime >= 17) return "🌕";
+            else return "☀️";
+        case "Clouds":
+            return "☁️";
+    }
+    return "❓";
 }
 
 },{"../dist/output.css":"ffhVg","date-fns":"9yHCA"}],"ffhVg":[function() {},{}],"9yHCA":[function(require,module,exports) {

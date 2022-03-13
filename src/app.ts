@@ -1,6 +1,5 @@
 import "../dist/output.css"
-import { fromUnixTime, getUnixTime } from 'date-fns'
-import { da } from "date-fns/locale";
+import { fromUnixTime} from 'date-fns'
 
 
 const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement;
@@ -16,6 +15,7 @@ let sunrise = document.getElementById("sunrise") as HTMLParagraphElement;
 let sunset = document.getElementById("sunset") as HTMLParagraphElement;
 let humidity = document.getElementById("humidity") as HTMLParagraphElement;
 const hourlyDailyToggle = document.getElementById("hourlyDailyToggle") as HTMLInputElement;
+let currentWeatherIcon = document.getElementById("currentWeatherIcon") as HTMLDivElement;
 let previousLatitude: string;
 let previousLongitude: string;
 let units = 'imperial';
@@ -55,14 +55,14 @@ async function getWeather(apiCall: string): Promise<any> {
       let dataTemp = `${Math.floor(data.main.temp)}°${temperatureUnit}`;
       // @ts-ignore
       const currentDateTime = await accurateTime(data.timezone, data.dt)
-      const sunriseTime = "Sunrise: " + await (await accurateTime(data.timezone, data.sys.sunrise)).slice(11, 16);
-      const sunsetTime = "Sunset: " + await (await accurateTime(data.timezone, data.sys.sunset)).slice(11, 16);
-      let humidityPercent = `Humidity: ${data.main.humidity}%`
+      const sunriseTime = "⬆️☀️  Sunrise: " + await (await accurateTime(data.timezone, data.sys.sunrise)).slice(11, 16);
+      const sunsetTime = "⬇️☀️  Sunset: " + await (await accurateTime(data.timezone, data.sys.sunset)).slice(11, 16);
+      let humidityPercent = `🥵  Humidity: ${data.main.humidity}%`
       let dataWind: string;
       if (units === 'metric') {
-        dataWind = `${Math.floor((data.wind.speed) * (18 / 5))}${speedUnit}`;
+        dataWind = `🌬️  ${Math.floor((data.wind.speed) * (18 / 5))}${speedUnit}`;
       } else {
-        dataWind = `${Math.floor(data.wind.speed)}${speedUnit}`;
+        dataWind = `🌬️  ${Math.floor(data.wind.speed)}${speedUnit}`;
       }
 
       // @ts-ignore
@@ -102,6 +102,7 @@ function locationByCords(lat: any, long: any) {
     temperature.innerHTML = Response[2];
     wind.innerHTML = Response[3];
     weather.innerHTML = Response[4];
+    currentWeatherIcon.innerHTML = weatherEmojis(Response[4]);
     dateTime.innerHTML = Response[0];
     sunrise.innerHTML = Response[5]
     sunset.innerHTML = Response[6]
@@ -117,6 +118,7 @@ function locationByName(input: HTMLInputElement) {
     temperature.innerHTML = Response[2];
     wind.innerHTML = Response[3];
     weather.innerHTML = Response[4];
+    currentWeatherIcon.innerHTML = weatherEmojis(Response[4].slice(9));
     dateTime.innerHTML = Response[0];
     sunrise.innerHTML = Response[5]
     sunset.innerHTML = Response[6]
@@ -137,14 +139,14 @@ darkModeBtn.onclick = (e) => {
 
 fahrenheit.onclick = () => {
   units = 'imperial'
-  temperatureUnit = 'f'
+  temperatureUnit = 'F'
   speedUnit = 'mph'
   locationByCords(previousLatitude, previousLongitude);
 }
 
 celsius.onclick = () => {
   units = 'metric'
-  temperatureUnit = 'c'
+  temperatureUnit = 'C'
   speedUnit = 'kph'
   locationByCords(previousLatitude, previousLongitude);
 }
@@ -171,6 +173,15 @@ async function accurateTime(timeZoneOffset: number, unixTime: number): Promise<s
 }
 
 hourlyDailyToggle.onclick = () => {
+  if (hourlyDailyToggle.checked == false) {
+    // Gets rid of the low temp which should be hidden on the hourly display :)
+    let lowTemps = document.getElementsByClassName("lowTemp");
+    for (let element of lowTemps) {
+      if (hourlyDailyToggle.checked == false) {
+        element.classList.toggle("hidden")
+      }
+    }
+  }
   oneCall(previousLatitude, previousLongitude);
 }
 
@@ -189,11 +200,28 @@ async function oneCallDaily(lat: string, lon: string): Promise<any> {
       let data = await output.json();
       console.log(data)
       let timeOrDay = document.getElementsByClassName("timeOrDay");
+      let highTemps = document.getElementsByClassName("highTemp");
+      let lowTemps = document.getElementsByClassName("lowTemp");
+      let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
 
       for (let i = 0; i < timeOrDay.length; i++) {
         let day = await accurateTime(data.timezone_offset, data.daily[i + 1].dt);
         timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" "))) 
       }
+
+      for (let i = 0; i < highTemps.length; i++) {let day = await accurateTime(data.timezone_offset, data.daily[i + 1].dt);
+        highTemps[i].innerHTML = `⬆️  ${Math.floor(data.daily[i + 1].temp.max)}°${temperatureUnit}`
+      }
+
+      for (let i = 0; i < lowTemps.length; i++) {
+        lowTemps[i].classList.toggle("hidden")
+         lowTemps[i].innerHTML = `⬇️  ${Math.floor(data.daily[i + 1].temp.min)}°${temperatureUnit}`
+      }
+
+      for (let i = 0; i < weatherIcons.length; i++) {
+        weatherIcons[i].innerHTML = weatherEmojis(data.daily[i + 1].weather[0].main); 
+      }
+
       return data;
     }
   } catch (err) {
@@ -210,11 +238,22 @@ async function oneCallHourly(lat: string, lon: string): Promise<any> {
       let data = await output.json();
       console.log(data)
       let timeOrDay = document.getElementsByClassName("timeOrDay");
+      let temps = document.getElementsByClassName("highTemp");
+      let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
 
       for (let i = 0; i < timeOrDay.length; i++) {
         let hour = await accurateTime(data.timezone_offset, data.hourly[i + 1].dt);
-        timeOrDay[i].innerHTML = hour.slice(11, 16)
+        timeOrDay[i].innerHTML = hour.slice(11, 16);
       }
+
+      for (let i = 0; i < temps.length; i++) {
+        temps[i].innerHTML = `${Math.floor(data.hourly[i + 1].temp)}°${temperatureUnit}`
+      }
+
+      for (let i = 0; i < weatherIcons.length; i++) {
+        weatherIcons[i].innerHTML = weatherEmojis(data.hourly[i + 1].weather[0].main); 
+      }
+
       return data;
     }
   } catch (err) {
@@ -249,4 +288,37 @@ function daysOfTheWeek(abb: string): string {
       break;
   }
   return "undefined"
+}
+
+function weatherEmojis(weather: string): string {
+  switch(weather) {
+    case "Thunderstorm":
+      return "⛈️"
+      break;
+    case "Drizzle":
+      return "🌧️"
+      break;
+    case "Rain":
+      return "☔"
+      break;
+    case "Snow":
+      return "🌨️";
+      break;
+    case "Atmosphere":
+      return "🌫️";
+      break;
+    case "Clear":
+      let currentTime = new Date().getHours()
+      if (currentTime >= 17) {
+        return "🌕";
+        break;
+      } else {
+        return "☀️";
+        break;
+      }
+    case "Clouds":
+      return "☁️";
+      break;
+  }
+  return "❓"
 }
