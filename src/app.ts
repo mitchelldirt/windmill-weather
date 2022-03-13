@@ -1,5 +1,6 @@
 import "../dist/output.css"
 import { fromUnixTime, getUnixTime } from 'date-fns'
+import { da } from "date-fns/locale";
 
 
 const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement;
@@ -56,7 +57,7 @@ async function getWeather(apiCall: string): Promise<any> {
       const currentDateTime = await accurateTime(data.timezone, data.dt)
       const sunriseTime = "Sunrise: " + await (await accurateTime(data.timezone, data.sys.sunrise)).slice(11, 16);
       const sunsetTime = "Sunset: " + await (await accurateTime(data.timezone, data.sys.sunset)).slice(11, 16);
-let humidityPercent = `Humidity: ${data.main.humidity}%`
+      let humidityPercent = `Humidity: ${data.main.humidity}%`
       let dataWind: string;
       if (units === 'metric') {
         dataWind = `${Math.floor((data.wind.speed) * (18 / 5))}${speedUnit}`;
@@ -169,6 +170,18 @@ async function accurateTime(timeZoneOffset: number, unixTime: number): Promise<s
   return `${date} ${time}`
 }
 
+hourlyDailyToggle.onclick = () => {
+  oneCall(previousLatitude, previousLongitude);
+}
+
+function oneCall(lat: string, lon: string): void {
+  if (hourlyDailyToggle.checked == true) {
+    oneCallDaily(lat, lon);
+  } else {
+    oneCallHourly(lat, lon);
+  }
+}
+
 async function oneCallDaily(lat: string, lon: string): Promise<any> {
   try {
     let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, { mode: "cors" });
@@ -177,11 +190,12 @@ async function oneCallDaily(lat: string, lon: string): Promise<any> {
       console.log(data)
       let timeOrDay = document.getElementsByClassName("timeOrDay");
 
-      for (let element of timeOrDay) {
-        element.innerHTML = data.daily[0].wind_gust;
+      for (let i = 0; i < timeOrDay.length; i++) {
+        let day = await accurateTime(data.timezone_offset, data.daily[i + 1].dt);
+        timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" "))) 
       }
       return data;
-}
+    }
   } catch (err) {
     console.log(err)
     // error function or default location
@@ -197,11 +211,12 @@ async function oneCallHourly(lat: string, lon: string): Promise<any> {
       console.log(data)
       let timeOrDay = document.getElementsByClassName("timeOrDay");
 
-      for (let element of timeOrDay) {
-        element.innerHTML = data.hourly[1].weather[0].main;
+      for (let i = 0; i < timeOrDay.length; i++) {
+        let hour = await accurateTime(data.timezone_offset, data.hourly[i + 1].dt);
+        timeOrDay[i].innerHTML = hour.slice(11, 16)
       }
       return data;
-}
+    }
   } catch (err) {
     console.log(err)
     // error function or default location
@@ -209,14 +224,29 @@ async function oneCallHourly(lat: string, lon: string): Promise<any> {
   }
 }
 
-hourlyDailyToggle.onclick = () => {
-  oneCall(previousLatitude, previousLongitude);
-}
-
-function oneCall(lat: string, lon: string): void {
-  if (hourlyDailyToggle.checked == true) {
-    oneCallDaily(lat, lon);
-  } else {
-    oneCallHourly(lat, lon);
+function daysOfTheWeek(abb: string): string {
+  switch (abb) {
+    case "Mon":
+      return "Monday"
+      break;
+    case "Tue":
+      return "Tuesday"
+      break;
+    case "Wed":
+      return "Wednesday"
+      break;
+    case "Thu":
+      return "Thursday";
+      break;
+    case "Fri":
+      return "Friday";
+      break;
+    case "Sat":
+      return "Saturday";
+      break;
+    case "Sun":
+      return "Sunday";
+      break;
   }
+  return "undefined"
 }

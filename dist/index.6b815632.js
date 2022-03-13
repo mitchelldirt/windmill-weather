@@ -675,6 +675,13 @@ async function accurateTime(timeZoneOffset, unixTime) {
     let time = _dateFns.fromUnixTime(unixTime + totalDiffUnix).toString().slice(16, 21);
     return `${date} ${time}`;
 }
+hourlyDailyToggle.onclick = ()=>{
+    oneCall(previousLatitude, previousLongitude);
+};
+function oneCall(lat, lon) {
+    if (hourlyDailyToggle.checked == true) oneCallDaily(lat, lon);
+    else oneCallHourly(lat, lon);
+}
 async function oneCallDaily(lat, lon) {
     try {
         let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, {
@@ -684,7 +691,10 @@ async function oneCallDaily(lat, lon) {
             let data2 = await output.json();
             console.log(data2);
             let timeOrDay = document.getElementsByClassName("timeOrDay");
-            for (let element of timeOrDay)element.innerHTML = data2.daily[0].wind_gust;
+            for(let i = 0; i < timeOrDay.length; i++){
+                let day = await accurateTime(data2.timezone_offset, data2.daily[i + 1].dt);
+                timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")));
+            }
             return data2;
         }
     } catch (err) {
@@ -702,7 +712,10 @@ async function oneCallHourly(lat, lon) {
             let data3 = await output.json();
             console.log(data3);
             let timeOrDay = document.getElementsByClassName("timeOrDay");
-            for (let element of timeOrDay)element.innerHTML = data3.hourly[1].weather[0].main;
+            for(let i = 0; i < timeOrDay.length; i++){
+                let hour = await accurateTime(data3.timezone_offset, data3.hourly[i + 1].dt);
+                timeOrDay[i].innerHTML = hour.slice(11, 16);
+            }
             return data3;
         }
     } catch (err) {
@@ -711,12 +724,24 @@ async function oneCallHourly(lat, lon) {
         return err;
     }
 }
-hourlyDailyToggle.onclick = ()=>{
-    oneCall(previousLatitude, previousLongitude);
-};
-function oneCall(lat, lon) {
-    if (hourlyDailyToggle.checked == true) oneCallDaily(lat, lon);
-    else oneCallHourly(lat, lon);
+function daysOfTheWeek(abb) {
+    switch(abb){
+        case "Mon":
+            return "Monday";
+        case "Tue":
+            return "Tuesday";
+        case "Wed":
+            return "Wednesday";
+        case "Thu":
+            return "Thursday";
+        case "Fri":
+            return "Friday";
+        case "Sat":
+            return "Saturday";
+        case "Sun":
+            return "Sunday";
+    }
+    return "undefined";
 }
 
 },{"../dist/output.css":"ffhVg","date-fns":"9yHCA"}],"ffhVg":[function() {},{}],"9yHCA":[function(require,module,exports) {
