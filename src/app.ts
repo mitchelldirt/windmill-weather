@@ -102,7 +102,7 @@ function locationByCords(lat: any, long: any) {
     temperature.innerHTML = Response[2];
     wind.innerHTML = Response[3];
     weather.innerHTML = Response[4];
-    currentWeatherIcon.innerHTML = weatherEmojis(Response[4]);
+    currentWeatherIcon.innerHTML = weatherEmojis(Response[4].slice(9));
     dateTime.innerHTML = Response[0];
     sunrise.innerHTML = Response[5]
     sunset.innerHTML = Response[6]
