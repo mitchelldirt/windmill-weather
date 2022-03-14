@@ -569,15 +569,15 @@ async function getWeather(apiCall) {
             // @ts-ignore
             let dataCity = `${data1.name}, ${data1.sys.country}`;
             // @ts-ignore
-            let dataTemp = `${Math.floor(data1.main.temp)}°${temperatureUnit}`;
+            let dataTemp = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(data1.main.temp)}°${temperatureUnit}`;
             // @ts-ignore
             const currentDateTime = await accurateTime(data1.timezone, data1.dt);
             const sunriseTime = "⬆️☀️  Sunrise: " + await (await accurateTime(data1.timezone, data1.sys.sunrise)).slice(11, 16);
             const sunsetTime = "⬇️☀️  Sunset: " + await (await accurateTime(data1.timezone, data1.sys.sunset)).slice(11, 16);
-            let humidityPercent = `🥵  Humidity: ${data1.main.humidity}%`;
+            let humidityPercent = `  🥵  Humidity: ${data1.main.humidity}%`;
             let dataWind;
-            if (units === 'metric') dataWind = `🌬️  ${Math.floor(data1.wind.speed * 3.6)}${speedUnit}`;
-            else dataWind = `🌬️  ${Math.floor(data1.wind.speed)}${speedUnit}`;
+            if (units === 'metric') dataWind = `  🌬️  Wind: ${Math.floor(data1.wind.speed * 3.6)}${speedUnit}`;
+            else dataWind = `  🌬️  Wind: ${Math.floor(data1.wind.speed)}${speedUnit}`;
             // @ts-ignore
             let dataWeather = `Weather: ${data1.weather[0].main}`;
             previousLatitude = data1.coord.lat;

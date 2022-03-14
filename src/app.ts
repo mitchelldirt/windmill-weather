@@ -1,5 +1,5 @@
 import "../dist/output.css"
-import { fromUnixTime} from 'date-fns'
+import { fromUnixTime } from 'date-fns'
 
 
 const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement;
@@ -52,17 +52,17 @@ async function getWeather(apiCall: string): Promise<any> {
       // @ts-ignore
       let dataCity = `${data.name}, ${data.sys.country}`
       // @ts-ignore
-      let dataTemp = `${Math.floor(data.main.temp)}°${temperatureUnit}`;
+      let dataTemp = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(data.main.temp)}°${temperatureUnit}`;
       // @ts-ignore
       const currentDateTime = await accurateTime(data.timezone, data.dt)
       const sunriseTime = "⬆️☀️  Sunrise: " + await (await accurateTime(data.timezone, data.sys.sunrise)).slice(11, 16);
       const sunsetTime = "⬇️☀️  Sunset: " + await (await accurateTime(data.timezone, data.sys.sunset)).slice(11, 16);
-      let humidityPercent = `🥵  Humidity: ${data.main.humidity}%`
+      let humidityPercent = `  🥵  Humidity: ${data.main.humidity}%`
       let dataWind: string;
       if (units === 'metric') {
-        dataWind = `🌬️  ${Math.floor((data.wind.speed) * (18 / 5))}${speedUnit}`;
+        dataWind = `  🌬️  Wind: ${Math.floor((data.wind.speed) * (18 / 5))}${speedUnit}`;
       } else {
-        dataWind = `🌬️  ${Math.floor(data.wind.speed)}${speedUnit}`;
+        dataWind = `  🌬️  Wind: ${Math.floor(data.wind.speed)}${speedUnit}`;
       }
 
       // @ts-ignore
@@ -206,20 +206,21 @@ async function oneCallDaily(lat: string, lon: string): Promise<any> {
 
       for (let i = 0; i < timeOrDay.length; i++) {
         let day = await accurateTime(data.timezone_offset, data.daily[i + 1].dt);
-        timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" "))) 
+        timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")))
       }
 
-      for (let i = 0; i < highTemps.length; i++) {let day = await accurateTime(data.timezone_offset, data.daily[i + 1].dt);
+      for (let i = 0; i < highTemps.length; i++) {
+        let day = await accurateTime(data.timezone_offset, data.daily[i + 1].dt);
         highTemps[i].innerHTML = `⬆️  ${Math.floor(data.daily[i + 1].temp.max)}°${temperatureUnit}`
       }
 
       for (let i = 0; i < lowTemps.length; i++) {
         lowTemps[i].classList.toggle("hidden")
-         lowTemps[i].innerHTML = `⬇️  ${Math.floor(data.daily[i + 1].temp.min)}°${temperatureUnit}`
+        lowTemps[i].innerHTML = `⬇️  ${Math.floor(data.daily[i + 1].temp.min)}°${temperatureUnit}`
       }
 
       for (let i = 0; i < weatherIcons.length; i++) {
-        weatherIcons[i].innerHTML = weatherEmojis(data.daily[i + 1].weather[0].main); 
+        weatherIcons[i].innerHTML = weatherEmojis(data.daily[i + 1].weather[0].main);
       }
 
       return data;
@@ -251,7 +252,7 @@ async function oneCallHourly(lat: string, lon: string): Promise<any> {
       }
 
       for (let i = 0; i < weatherIcons.length; i++) {
-        weatherIcons[i].innerHTML = weatherEmojis(data.hourly[i + 1].weather[0].main); 
+        weatherIcons[i].innerHTML = weatherEmojis(data.hourly[i + 1].weather[0].main);
       }
 
       return data;
@@ -291,7 +292,7 @@ function daysOfTheWeek(abb: string): string {
 }
 
 function weatherEmojis(weather: string): string {
-  switch(weather) {
+  switch (weather) {
     case "Thunderstorm":
       return "⛈️"
       break;
