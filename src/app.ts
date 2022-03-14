@@ -81,7 +81,7 @@ async function getWeather(apiCall: string): Promise<any> {
 }
 
 window.onload = () => {
-  searchBar.value = "Amsterdam, NL";
+  searchBar.value = "Holland, MI, US";
   submitBtn.click();
   searchBar.value = "";
 }
