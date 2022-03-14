@@ -505,6 +505,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   bottom: 0px;
 }
 
+.top-16{
+  top: 4rem;
+}
+
 .m-0{
   margin: 0px;
 }
