@@ -847,6 +847,21 @@ Ensure the default browser behavior of the `hidden` attribute.
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.placeholder\:text-xs::-moz-placeholder{
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.placeholder\:text-xs:-ms-input-placeholder{
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.placeholder\:text-xs::placeholder{
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
 .after\:h-8::after{
   content: var(--tw-content);
   height: 2rem;
@@ -917,6 +932,26 @@ Ensure the default browser behavior of the `hidden` attribute.
     font-size: 1.25rem;
     line-height: 1.75rem;
   }
+
+  .sm\:text-sm{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .sm\:placeholder\:text-sm::-moz-placeholder{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .sm\:placeholder\:text-sm:-ms-input-placeholder{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .sm\:placeholder\:text-sm::placeholder{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
 }
 
 @media (min-width: 768px){
@@ -985,6 +1020,26 @@ Ensure the default browser behavior of the `hidden` attribute.
   .md\:text-4xl{
     font-size: 2.25rem;
     line-height: 2.5rem;
+  }
+
+  .md\:text-base{
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .md\:placeholder\:text-base::-moz-placeholder{
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .md\:placeholder\:text-base:-ms-input-placeholder{
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .md\:placeholder\:text-base::placeholder{
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 }
 
@@ -1088,6 +1143,26 @@ Ensure the default browser behavior of the `hidden` attribute.
   .lg\:text-4xl{
     font-size: 2.25rem;
     line-height: 2.5rem;
+  }
+
+  .lg\:text-lg{
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  .lg\:placeholder\:text-lg::-moz-placeholder{
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  .lg\:placeholder\:text-lg:-ms-input-placeholder{
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  .lg\:placeholder\:text-lg::placeholder{
+    font-size: 1.125rem;
+    line-height: 1.75rem;
   }
 }
 
