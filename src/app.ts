@@ -9,11 +9,13 @@ let options = {
   minNumberOfCharacters: 3,
   searchOptions: {
       key: 'ZEb5L8GGP8z6EbW61xwLPg0AVdpKak7W',
-      language: 'en-GB'
+      language: 'en-GB',
+      idxSet: 'Geo'
   },
   autocompleteOptions: {
       key: 'ZEb5L8GGP8z6EbW61xwLPg0AVdpKak7W',
-      language: 'en-GB'
+      language: 'en-GB',
+      resultSet: 'Address'
   },
   noResultsMessage: 'No results found.'
 }
@@ -53,6 +55,7 @@ let data: JSON;
 let includeState: RegExp = new RegExp('[a-z,-. ]*, ?[a-z]{2}, ?[a-z]{2}', 'mi');
 let patternMinusState: RegExp = new RegExp('^[a-z-. ]*, ?[a-z]{2}$', 'mi');
 
+/*
 submitBtn.onclick = (e) => {
   e.preventDefault();
   if (includeState.test(searchBar.value) === true || patternMinusState.test(searchBar.value) === true) {
@@ -69,7 +72,7 @@ submitBtn.onclick = (e) => {
     return;
   }
 };
-
+*/
 async function getWeather(apiCall: string): Promise<any> {
   try {
     let output = await fetch(apiCall, { mode: "cors" });
@@ -108,9 +111,7 @@ async function getWeather(apiCall: string): Promise<any> {
 }
 
 window.onload = () => {
-  searchBar.value = "Holland, MI, US";
-  submitBtn.click();
-  searchBar.value = "";
+  locationByCords('42.789379', '-86.107201')
 }
 
 let locationBtn = document.getElementById("location") as HTMLButtonElement;
@@ -121,7 +122,7 @@ locationBtn.onclick = () => {
   })
 };
 
-function locationByCords(lat: any, long: any) {
+async function locationByCords(lat: any, long: any) {
   let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`
   return getWeather(apiCall).then(Response => {
     console.log(Response[0])

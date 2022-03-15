@@ -530,11 +530,13 @@ let options = {
     minNumberOfCharacters: 3,
     searchOptions: {
         key: 'ZEb5L8GGP8z6EbW61xwLPg0AVdpKak7W',
-        language: 'en-GB'
+        language: 'en-GB',
+        idxSet: 'Geo'
     },
     autocompleteOptions: {
         key: 'ZEb5L8GGP8z6EbW61xwLPg0AVdpKak7W',
-        language: 'en-GB'
+        language: 'en-GB',
+        resultSet: 'Address'
     },
     noResultsMessage: 'No results found.'
 };
@@ -569,22 +571,24 @@ let speedUnit = 'mph';
 let data;
 let includeState = new RegExp('[a-z,-. ]*, ?[a-z]{2}, ?[a-z]{2}', 'mi');
 let patternMinusState = new RegExp('^[a-z-. ]*, ?[a-z]{2}$', 'mi');
-submitBtn.onclick = (e)=>{
-    e.preventDefault();
-    if (includeState.test(searchBar.value) === true || patternMinusState.test(searchBar.value) === true) {
-        locationByName(searchBar);
-        searchBar.value = "";
-    } else if (searchBar.value === "") return;
-    else {
-        document.getElementById("searchAlert")?.classList.toggle("hidden");
-        searchBar.value = "";
-        setTimeout(()=>{
-            document.getElementById("searchAlert")?.classList.toggle("hidden");
-        }, 5000);
-        return;
-    }
+/*
+submitBtn.onclick = (e) => {
+  e.preventDefault();
+  if (includeState.test(searchBar.value) === true || patternMinusState.test(searchBar.value) === true) {
+    locationByName(searchBar)
+    searchBar.value = "";
+  } else if (searchBar.value === "") {
+    return;
+  } else {
+    document.getElementById("searchAlert")?.classList.toggle("hidden");
+    searchBar.value = "";
+    setTimeout(() => {
+      document.getElementById("searchAlert")?.classList.toggle("hidden");
+    }, 5000);
+    return;
+  }
 };
-async function getWeather(apiCall) {
+*/ async function getWeather(apiCall) {
     try {
         let output = await fetch(apiCall, {
             mode: "cors"
@@ -627,9 +631,7 @@ async function getWeather(apiCall) {
     }
 }
 window.onload = ()=>{
-    searchBar.value = "Holland, MI, US";
-    submitBtn.click();
-    searchBar.value = "";
+    locationByCords('42.789379', '-86.107201');
 };
 let locationBtn = document.getElementById("location");
 locationBtn.onclick = ()=>{
@@ -637,7 +639,7 @@ locationBtn.onclick = ()=>{
         locationByCords(position.coords.latitude, position.coords.longitude);
     });
 };
-function locationByCords(lat, long) {
+async function locationByCords(lat, long) {
     let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
     return getWeather(apiCall).then((Response)=>{
         console.log(Response[0]);
