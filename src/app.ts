@@ -1,6 +1,33 @@
 import "../dist/output.css"
 import { fromUnixTime } from 'date-fns'
+import { services } from '@tomtom-international/web-sdk-services';
+import SearchBox from '@tomtom-international/web-sdk-plugin-searchbox';
 
+
+let options = {
+  idleTimePress: 100,
+  minNumberOfCharacters: 3,
+  searchOptions: {
+      key: 'ZEb5L8GGP8z6EbW61xwLPg0AVdpKak7W',
+      language: 'en-GB'
+  },
+  autocompleteOptions: {
+      key: 'ZEb5L8GGP8z6EbW61xwLPg0AVdpKak7W',
+      language: 'en-GB'
+  },
+  noResultsMessage: 'No results found.'
+}
+
+const ttSearchBox = new SearchBox(services, options);
+const searchBoxHTML = ttSearchBox.getSearchBoxHTML();
+let searchBarContainer = document.getElementById('searchContainer') as HTMLDivElement
+searchBarContainer.appendChild(searchBoxHTML);
+
+ttSearchBox.on('tomtom.searchbox.resultselected', async function(data) {
+  //@ts-ignore
+  locationByCords(data.data.result.position.lat, data.data.result.position.lng);
+  return;
+});
 
 const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement;
 const searchBar = document.getElementById("searchBar") as HTMLInputElement;
