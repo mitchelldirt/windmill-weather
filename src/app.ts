@@ -31,8 +31,6 @@ ttSearchBox.on('tomtom.searchbox.resultselected', async function(data) {
   return;
 });
 
-const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement;
-const searchBar = document.getElementById("searchBar") as HTMLInputElement;
 const temperature = document.getElementById("temperature") as HTMLParagraphElement;
 const wind = document.getElementById("wind") as HTMLParagraphElement;
 const weather = document.getElementById("weather") as HTMLParagraphElement;
@@ -50,30 +48,9 @@ let previousLongitude: string;
 let units = 'imperial';
 let temperatureUnit = 'F';
 let speedUnit = 'mph'
-let data: JSON;
+let previousData: JSON;
 
-let includeState: RegExp = new RegExp('[a-z,-. ]*, ?[a-z]{2}, ?[a-z]{2}', 'mi');
-let patternMinusState: RegExp = new RegExp('^[a-z-. ]*, ?[a-z]{2}$', 'mi');
-
-/*
-submitBtn.onclick = (e) => {
-  e.preventDefault();
-  if (includeState.test(searchBar.value) === true || patternMinusState.test(searchBar.value) === true) {
-    locationByName(searchBar)
-    searchBar.value = "";
-  } else if (searchBar.value === "") {
-    return;
-  } else {
-    document.getElementById("searchAlert")?.classList.toggle("hidden");
-    searchBar.value = "";
-    setTimeout(() => {
-      document.getElementById("searchAlert")?.classList.toggle("hidden");
-    }, 5000);
-    return;
-  }
-};
-*/
-async function getWeather(apiCall: string): Promise<any> {
+async function getCurrentWeather(apiCall: string): Promise<any> {
   try {
     let output = await fetch(apiCall, { mode: "cors" });
     if (output.status === 200) {
@@ -123,7 +100,14 @@ locationBtn.onclick = () => {
 };
 
 async function locationByCords(lat: any, long: any) {
-  let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`
+  let apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
+  let output = await fetch(apiCall, { mode: "cors" });
+    if (output.status === 200) {
+      let data = await output.json();
+      previousData = await data;
+      getCurrentWeather(data);
+      oneCall()
+    }
   return getWeather(apiCall).then(Response => {
     console.log(Response[0])
     city.innerHTML = Response[1];
@@ -137,22 +121,6 @@ async function locationByCords(lat: any, long: any) {
     humidity.innerHTML = Response[7];
   })
 }
-
-function locationByName(input: HTMLInputElement) {
-  let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=${units}&appid=6a9b62a8dc1c79ef3c28a15de1a5634a
-  `;
-  return getWeather(apiCall).then(Response => {
-    city.innerHTML = Response[1];
-    temperature.innerHTML = Response[2];
-    wind.innerHTML = Response[3];
-    weather.innerHTML = Response[4];
-    currentWeatherIcon.innerHTML = weatherEmojis(Response[4].slice(9));
-    dateTime.innerHTML = Response[0];
-    sunrise.innerHTML = Response[5]
-    sunset.innerHTML = Response[6]
-    humidity.innerHTML = Response[7];
-  })
-};
 
 let sunIcon = document.getElementById("sunIcon") as HTMLImageElement;
 let moonIcon = document.getElementById("moonIcon") as HTMLImageElement;
@@ -179,14 +147,6 @@ celsius.onclick = () => {
   locationByCords(previousLatitude, previousLongitude);
 }
 
-function getDateTime(): string {
-  let current = new Date();
-  let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
-  let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
-  let dateTime = cDate + ' ' + cTime;
-  return dateTime;
-}
-
 async function accurateTime(timeZoneOffset: number, unixTime: number): Promise<string> {
   const localDate = new Date();
   let localDiff = localDate.getTimezoneOffset();
@@ -210,30 +170,27 @@ hourlyDailyToggle.onclick = () => {
       }
     }
   }
-  oneCall(previousLatitude, previousLongitude);
+  oneCall(previousData);
 }
 
-function oneCall(lat: string, lon: string): void {
+function oneCall(data: JSON): void {
   if (hourlyDailyToggle.checked == true) {
-    oneCallDaily(lat, lon);
+    oneCallDaily(data);
   } else {
-    oneCallHourly(lat, lon);
+    oneCallHourly(data);
   }
 }
 
-async function oneCallDaily(lat: string, lon: string): Promise<any> {
-  try {
-    let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, { mode: "cors" });
-    if (output.status === 200) {
-      let data = await output.json();
-      console.log(data)
+async function oneCallDaily(results: JSON): Promise<any> {
       let timeOrDay = document.getElementsByClassName("timeOrDay");
       let highTemps = document.getElementsByClassName("highTemp");
       let lowTemps = document.getElementsByClassName("lowTemp");
       let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
 
       for (let i = 0; i < timeOrDay.length; i++) {
-        let day = await accurateTime(data.timezone_offset, data.daily[i + 1].dt);
+        //@ts-ignore
+        let day = accurateTime(results.data.timezone_offset, results.data.daily[i + 1].dt);
+        //@ts-ignore
         timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")))
       }
 
@@ -260,12 +217,7 @@ async function oneCallDaily(lat: string, lon: string): Promise<any> {
   }
 }
 
-async function oneCallHourly(lat: string, lon: string): Promise<any> {
-  try {
-    let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, { mode: "cors" });
-    if (output.status === 200) {
-      let data = await output.json();
-      console.log(data)
+async function oneCallHourly(results): Promise<any> {
       let timeOrDay = document.getElementsByClassName("timeOrDay");
       let temps = document.getElementsByClassName("highTemp");
       let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");

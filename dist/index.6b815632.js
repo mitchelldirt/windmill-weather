@@ -544,13 +544,11 @@ const ttSearchBox = new _webSdkPluginSearchboxDefault.default(_webSdkServices.se
 const searchBoxHTML = ttSearchBox.getSearchBoxHTML();
 let searchBarContainer = document.getElementById('searchContainer');
 searchBarContainer.appendChild(searchBoxHTML);
-ttSearchBox.on('tomtom.searchbox.resultselected', async function(data1) {
+ttSearchBox.on('tomtom.searchbox.resultselected', async function(data) {
     //@ts-ignore
-    locationByCords(data1.data.result.position.lat, data1.data.result.position.lng);
+    locationByCords(data.data.result.position.lat, data.data.result.position.lng);
     return;
 });
-const submitBtn = document.getElementById("submitBtn");
-const searchBar = document.getElementById("searchBar");
 const temperature = document.getElementById("temperature");
 const wind = document.getElementById("wind");
 const weather = document.getElementById("weather");
@@ -568,50 +566,31 @@ let previousLongitude;
 let units = 'imperial';
 let temperatureUnit = 'F';
 let speedUnit = 'mph';
-let data;
-let includeState = new RegExp('[a-z,-. ]*, ?[a-z]{2}, ?[a-z]{2}', 'mi');
-let patternMinusState = new RegExp('^[a-z-. ]*, ?[a-z]{2}$', 'mi');
-/*
-submitBtn.onclick = (e) => {
-  e.preventDefault();
-  if (includeState.test(searchBar.value) === true || patternMinusState.test(searchBar.value) === true) {
-    locationByName(searchBar)
-    searchBar.value = "";
-  } else if (searchBar.value === "") {
-    return;
-  } else {
-    document.getElementById("searchAlert")?.classList.toggle("hidden");
-    searchBar.value = "";
-    setTimeout(() => {
-      document.getElementById("searchAlert")?.classList.toggle("hidden");
-    }, 5000);
-    return;
-  }
-};
-*/ async function getWeather(apiCall) {
+let previousData;
+async function getWeather(apiCall) {
     try {
         let output = await fetch(apiCall, {
             mode: "cors"
         });
         if (output.status === 200) {
-            let data2 = await output.json();
-            console.log(data2);
+            let data = await output.json();
+            console.log(data);
             // @ts-ignore
-            let dataCity = `${data2.name}, ${data2.sys.country}`;
+            let dataCity = `${data.name}, ${data.sys.country}`;
             // @ts-ignore
-            let dataTemp = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(data2.main.temp)}°${temperatureUnit}`;
+            let dataTemp = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(data.main.temp)}°${temperatureUnit}`;
             // @ts-ignore
-            const currentDateTime = await accurateTime(data2.timezone, data2.dt);
-            const sunriseTime = "⬆️☀️  Sunrise: " + await (await accurateTime(data2.timezone, data2.sys.sunrise)).slice(11, 16);
-            const sunsetTime = "⬇️☀️  Sunset: " + await (await accurateTime(data2.timezone, data2.sys.sunset)).slice(11, 16);
-            let humidityPercent = `  🥵  Humidity: ${data2.main.humidity}%`;
+            const currentDateTime = await accurateTime(data.timezone, data.dt);
+            const sunriseTime = "⬆️☀️  Sunrise: " + await (await accurateTime(data.timezone, data.sys.sunrise)).slice(11, 16);
+            const sunsetTime = "⬇️☀️  Sunset: " + await (await accurateTime(data.timezone, data.sys.sunset)).slice(11, 16);
+            let humidityPercent = `  🥵  Humidity: ${data.main.humidity}%`;
             let dataWind;
-            if (units === 'metric') dataWind = `  🌬️  Wind: ${Math.floor(data2.wind.speed * 3.6)}${speedUnit}`;
-            else dataWind = `  🌬️  Wind: ${Math.floor(data2.wind.speed)}${speedUnit}`;
+            if (units === 'metric') dataWind = `  🌬️  Wind: ${Math.floor(data.wind.speed * 3.6)}${speedUnit}`;
+            else dataWind = `  🌬️  Wind: ${Math.floor(data.wind.speed)}${speedUnit}`;
             // @ts-ignore
-            let dataWeather = `Weather: ${data2.weather[0].main}`;
-            previousLatitude = data2.coord.lat;
-            previousLongitude = data2.coord.lon;
+            let dataWeather = `Weather: ${data.weather[0].main}`;
+            previousLatitude = data.coord.lat;
+            previousLongitude = data.coord.lon;
             oneCall(previousLatitude, previousLongitude);
             return [
                 currentDateTime,
@@ -640,24 +619,16 @@ locationBtn.onclick = ()=>{
     });
 };
 async function locationByCords(lat, long) {
-    let apiCall = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
+    let apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
+    let output = await fetch(apiCall, {
+        mode: "cors"
+    });
+    if (output.status === 200) {
+        let data = await output.json();
+        previousData = await data;
+    }
     return getWeather(apiCall).then((Response)=>{
         console.log(Response[0]);
-        city.innerHTML = Response[1];
-        temperature.innerHTML = Response[2];
-        wind.innerHTML = Response[3];
-        weather.innerHTML = Response[4];
-        currentWeatherIcon.innerHTML = weatherEmojis(Response[4].slice(9));
-        dateTime.innerHTML = Response[0];
-        sunrise.innerHTML = Response[5];
-        sunset.innerHTML = Response[6];
-        humidity.innerHTML = Response[7];
-    });
-}
-function locationByName(input) {
-    let apiCall = `https://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=${units}&appid=6a9b62a8dc1c79ef3c28a15de1a5634a
-  `;
-    return getWeather(apiCall).then((Response)=>{
         city.innerHTML = Response[1];
         temperature.innerHTML = Response[2];
         wind.innerHTML = Response[3];
@@ -691,13 +662,6 @@ celsius.onclick = ()=>{
     speedUnit = 'kph';
     locationByCords(previousLatitude, previousLongitude);
 };
-function getDateTime() {
-    let current = new Date();
-    let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
-    let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
-    let dateTime1 = cDate + ' ' + cTime;
-    return dateTime1;
-}
 async function accurateTime(timeZoneOffset, unixTime) {
     const localDate = new Date();
     let localDiff = localDate.getTimezoneOffset();
@@ -720,30 +684,30 @@ function oneCall(lat, lon) {
 }
 async function oneCallDaily(lat, lon) {
     try {
-        let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, {
+        let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, {
             mode: "cors"
         });
         if (output.status === 200) {
-            let data3 = await output.json();
-            console.log(data3);
+            let data = await output.json();
+            console.log(data);
             let timeOrDay = document.getElementsByClassName("timeOrDay");
             let highTemps = document.getElementsByClassName("highTemp");
             let lowTemps = document.getElementsByClassName("lowTemp");
             let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
             for(let i = 0; i < timeOrDay.length; i++){
-                let day = await accurateTime(data3.timezone_offset, data3.daily[i + 1].dt);
+                let day = await accurateTime(data.timezone_offset, data.daily[i + 1].dt);
                 timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")));
             }
             for(let i1 = 0; i1 < highTemps.length; i1++){
-                let day = await accurateTime(data3.timezone_offset, data3.daily[i1 + 1].dt);
-                highTemps[i1].innerHTML = `⬆️  ${Math.floor(data3.daily[i1 + 1].temp.max)}°${temperatureUnit}`;
+                let day = await accurateTime(data.timezone_offset, data.daily[i1 + 1].dt);
+                highTemps[i1].innerHTML = `⬆️  ${Math.floor(data.daily[i1 + 1].temp.max)}°${temperatureUnit}`;
             }
             for(let i2 = 0; i2 < lowTemps.length; i2++){
                 lowTemps[i2].classList.toggle("hidden");
-                lowTemps[i2].innerHTML = `⬇️  ${Math.floor(data3.daily[i2 + 1].temp.min)}°${temperatureUnit}`;
+                lowTemps[i2].innerHTML = `⬇️  ${Math.floor(data.daily[i2 + 1].temp.min)}°${temperatureUnit}`;
             }
-            for(let i3 = 0; i3 < weatherIcons.length; i3++)weatherIcons[i3].innerHTML = weatherEmojis(data3.daily[i3 + 1].weather[0].main);
-            return data3;
+            for(let i3 = 0; i3 < weatherIcons.length; i3++)weatherIcons[i3].innerHTML = weatherEmojis(data.daily[i3 + 1].weather[0].main);
+            return data;
         }
     } catch (err) {
         console.log(err);
@@ -757,18 +721,18 @@ async function oneCallHourly(lat, lon) {
             mode: "cors"
         });
         if (output.status === 200) {
-            let data4 = await output.json();
-            console.log(data4);
+            let data = await output.json();
+            console.log(data);
             let timeOrDay = document.getElementsByClassName("timeOrDay");
             let temps = document.getElementsByClassName("highTemp");
             let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
             for(let i = 0; i < timeOrDay.length; i++){
-                let hour = await accurateTime(data4.timezone_offset, data4.hourly[i + 1].dt);
+                let hour = await accurateTime(data.timezone_offset, data.hourly[i + 1].dt);
                 timeOrDay[i].innerHTML = hour.slice(11, 16);
             }
-            for(let i4 = 0; i4 < temps.length; i4++)temps[i4].innerHTML = `${Math.floor(data4.hourly[i4 + 1].temp)}°${temperatureUnit}`;
-            for(let i5 = 0; i5 < weatherIcons.length; i5++)weatherIcons[i5].innerHTML = weatherEmojis(data4.hourly[i5 + 1].weather[0].main);
-            return data4;
+            for(let i4 = 0; i4 < temps.length; i4++)temps[i4].innerHTML = `${Math.floor(data.hourly[i4 + 1].temp)}°${temperatureUnit}`;
+            for(let i5 = 0; i5 < weatherIcons.length; i5++)weatherIcons[i5].innerHTML = weatherEmojis(data.hourly[i5 + 1].weather[0].main);
+            return data;
         }
     } catch (err) {
         console.log(err);
