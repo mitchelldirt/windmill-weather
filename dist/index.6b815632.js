@@ -567,47 +567,13 @@ let units = 'imperial';
 let temperatureUnit = 'F';
 let speedUnit = 'mph';
 let previousData;
-async function getWeather(apiCall) {
-    try {
-        let output = await fetch(apiCall, {
-            mode: "cors"
-        });
-        if (output.status === 200) {
-            let data = await output.json();
-            console.log(data);
-            // @ts-ignore
-            let dataCity = `${data.name}, ${data.sys.country}`;
-            // @ts-ignore
-            let dataTemp = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(data.main.temp)}°${temperatureUnit}`;
-            // @ts-ignore
-            const currentDateTime = await accurateTime(data.timezone, data.dt);
-            const sunriseTime = "⬆️☀️  Sunrise: " + await (await accurateTime(data.timezone, data.sys.sunrise)).slice(11, 16);
-            const sunsetTime = "⬇️☀️  Sunset: " + await (await accurateTime(data.timezone, data.sys.sunset)).slice(11, 16);
-            let humidityPercent = `  🥵  Humidity: ${data.main.humidity}%`;
-            let dataWind;
-            if (units === 'metric') dataWind = `  🌬️  Wind: ${Math.floor(data.wind.speed * 3.6)}${speedUnit}`;
-            else dataWind = `  🌬️  Wind: ${Math.floor(data.wind.speed)}${speedUnit}`;
-            // @ts-ignore
-            let dataWeather = `Weather: ${data.weather[0].main}`;
-            previousLatitude = data.coord.lat;
-            previousLongitude = data.coord.lon;
-            oneCall(previousLatitude, previousLongitude);
-            return [
-                currentDateTime,
-                dataCity,
-                dataTemp,
-                dataWind,
-                dataWeather,
-                sunriseTime,
-                sunsetTime,
-                humidityPercent
-            ];
-        }
-    } catch (err) {
-        console.log(err);
-        // error function or default location
-        return err;
-    }
+async function accurateTime(timeZoneOffset, unixTime) {
+    const localDate = new Date();
+    let localDiff = localDate.getTimezoneOffset();
+    let totalDiffUnix = (timeZoneOffset / 60 + localDiff) * 60;
+    let date = _dateFns.fromUnixTime(unixTime + totalDiffUnix).toString().slice(0, 10);
+    let time = _dateFns.fromUnixTime(unixTime + totalDiffUnix).toString().slice(16, 21);
+    return `${date} ${time}`;
 }
 window.onload = ()=>{
     locationByCords('42.789379', '-86.107201');
@@ -615,30 +581,42 @@ window.onload = ()=>{
 let locationBtn = document.getElementById("location");
 locationBtn.onclick = ()=>{
     navigator.geolocation.getCurrentPosition(function(position) {
+        previousLatitude = position.coords.latitude.toString();
+        previousLongitude = position.coords.longitude.toString();
         locationByCords(position.coords.latitude, position.coords.longitude);
     });
 };
 async function locationByCords(lat, long) {
     let apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
-    let output = await fetch(apiCall, {
-        mode: "cors"
-    });
-    if (output.status === 200) {
-        let data = await output.json();
-        previousData = await data;
+    try {
+        let output = await fetch(apiCall, {
+            mode: "cors"
+        });
+        if (output.status === 200) {
+            let data = await output.json();
+            console.log(data);
+            //TODO: MIGHT HAVE TO BREAK OUT INTO A SEPARATE REVERSE GEOCODING API :(
+            // @ts-ignore
+            //let dataCity = `${data.name}, ${data.current.sys.country}`
+            // @ts-ignore
+            temperature.innerHTML = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(data.current.temp)}°${temperatureUnit}`;
+            // @ts-ignore
+            dateTime.innerHTML = await accurateTime(data.timezone_offset, data.current.dt);
+            sunrise.innerHTML = "⬆️☀️  Sunrise: " + await (await accurateTime(data.timezone_offset, data.current.sunrise)).slice(11, 16);
+            sunset.innerHTML = "⬇️☀️  Sunset: " + await (await accurateTime(data.timezone_offset, data.current.sunset)).slice(11, 16);
+            humidity.innerHTML = `  🥵  Humidity: ${data.current.humidity}%`;
+            if (units === 'metric') wind.innerHTML = `  🌬️  Wind: ${Math.floor(data.current.wind_speed * 3.6)}${speedUnit}`;
+            else wind.innerHTML = `  🌬️  Wind: ${Math.floor(data.current.wind_speed)}${speedUnit}`;
+            // @ts-ignore
+            weather.innerHTML = `Weather: ${data.current.weather[0].main}`;
+            currentWeatherIcon.innerHTML = weatherEmojis(data.current.weather[0].main);
+            previousData = data;
+            oneCall(previousData);
+        }
+    } catch (err) {
+        console.log(err);
+        return err;
     }
-    return getWeather(apiCall).then((Response)=>{
-        console.log(Response[0]);
-        city.innerHTML = Response[1];
-        temperature.innerHTML = Response[2];
-        wind.innerHTML = Response[3];
-        weather.innerHTML = Response[4];
-        currentWeatherIcon.innerHTML = weatherEmojis(Response[4].slice(9));
-        dateTime.innerHTML = Response[0];
-        sunrise.innerHTML = Response[5];
-        sunset.innerHTML = Response[6];
-        humidity.innerHTML = Response[7];
-    });
 }
 let sunIcon = document.getElementById("sunIcon");
 let moonIcon = document.getElementById("moonIcon");
@@ -662,81 +640,59 @@ celsius.onclick = ()=>{
     speedUnit = 'kph';
     locationByCords(previousLatitude, previousLongitude);
 };
-async function accurateTime(timeZoneOffset, unixTime) {
-    const localDate = new Date();
-    let localDiff = localDate.getTimezoneOffset();
-    let totalDiffUnix = (timeZoneOffset / 60 + localDiff) * 60;
-    let date = _dateFns.fromUnixTime(unixTime + totalDiffUnix).toString().slice(0, 10);
-    let time = _dateFns.fromUnixTime(unixTime + totalDiffUnix).toString().slice(16, 21);
-    return `${date} ${time}`;
-}
 hourlyDailyToggle.onclick = ()=>{
     if (hourlyDailyToggle.checked == false) {
         // Gets rid of the low temp which should be hidden on the hourly display :)
         let lowTemps = document.getElementsByClassName("lowTemp");
         for (let element of lowTemps)if (hourlyDailyToggle.checked == false) element.classList.toggle("hidden");
     }
-    oneCall(previousLatitude, previousLongitude);
+    oneCall(previousData);
 };
-function oneCall(lat, lon) {
-    if (hourlyDailyToggle.checked == true) oneCallDaily(lat, lon);
-    else oneCallHourly(lat, lon);
+function oneCall(data) {
+    if (hourlyDailyToggle.checked == true) oneCallDaily(data);
+    else oneCallHourly(data);
 }
-async function oneCallDaily(lat, lon) {
-    try {
-        let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, {
-            mode: "cors"
-        });
-        if (output.status === 200) {
-            let data = await output.json();
-            console.log(data);
-            let timeOrDay = document.getElementsByClassName("timeOrDay");
-            let highTemps = document.getElementsByClassName("highTemp");
-            let lowTemps = document.getElementsByClassName("lowTemp");
-            let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
-            for(let i = 0; i < timeOrDay.length; i++){
-                let day = await accurateTime(data.timezone_offset, data.daily[i + 1].dt);
-                timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")));
-            }
-            for(let i1 = 0; i1 < highTemps.length; i1++){
-                let day = await accurateTime(data.timezone_offset, data.daily[i1 + 1].dt);
-                highTemps[i1].innerHTML = `⬆️  ${Math.floor(data.daily[i1 + 1].temp.max)}°${temperatureUnit}`;
-            }
-            for(let i2 = 0; i2 < lowTemps.length; i2++){
-                lowTemps[i2].classList.toggle("hidden");
-                lowTemps[i2].innerHTML = `⬇️  ${Math.floor(data.daily[i2 + 1].temp.min)}°${temperatureUnit}`;
-            }
-            for(let i3 = 0; i3 < weatherIcons.length; i3++)weatherIcons[i3].innerHTML = weatherEmojis(data.daily[i3 + 1].weather[0].main);
-            return data;
-        }
-    } catch (err) {
-        console.log(err);
-        // error function or default location
-        return err;
+async function oneCallDaily(results) {
+    let timeOrDay = document.getElementsByClassName("timeOrDay");
+    let highTemps = document.getElementsByClassName("highTemp");
+    let lowTemps = document.getElementsByClassName("lowTemp");
+    let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
+    for(let i = 0; i < timeOrDay.length; i++){
+        //@ts-ignore
+        let day = await accurateTime(results.timezone_offset, results.daily[i + 1].dt);
+        //@ts-ignore
+        timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")));
     }
+    for(let i1 = 0; i1 < highTemps.length; i1++){
+        //@ts-ignore
+        let day = accurateTime(results.timezone_offset, results.daily[i1 + 1].dt);
+        //@ts-ignore
+        highTemps[i1].innerHTML = `⬆️  ${Math.floor(results.daily[i1 + 1].temp.max)}°${temperatureUnit}`;
+    }
+    for(let i2 = 0; i2 < lowTemps.length; i2++){
+        lowTemps[i2].classList.toggle("hidden");
+        //@ts-ignore
+        lowTemps[i2].innerHTML = `⬇️  ${Math.floor(results.daily[i2 + 1].temp.min)}°${temperatureUnit}`;
+    }
+    for(let i3 = 0; i3 < weatherIcons.length; i3++)//@ts-ignore
+    weatherIcons[i3].innerHTML = weatherEmojis(results.daily[i3 + 1].weather[0].main);
 }
-async function oneCallHourly(lat, lon) {
+async function oneCallHourly(results) {
     try {
-        let output = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`, {
-            mode: "cors"
-        });
-        if (output.status === 200) {
-            let data = await output.json();
-            console.log(data);
-            let timeOrDay = document.getElementsByClassName("timeOrDay");
-            let temps = document.getElementsByClassName("highTemp");
-            let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
-            for(let i = 0; i < timeOrDay.length; i++){
-                let hour = await accurateTime(data.timezone_offset, data.hourly[i + 1].dt);
-                timeOrDay[i].innerHTML = hour.slice(11, 16);
-            }
-            for(let i4 = 0; i4 < temps.length; i4++)temps[i4].innerHTML = `${Math.floor(data.hourly[i4 + 1].temp)}°${temperatureUnit}`;
-            for(let i5 = 0; i5 < weatherIcons.length; i5++)weatherIcons[i5].innerHTML = weatherEmojis(data.hourly[i5 + 1].weather[0].main);
-            return data;
+        let timeOrDay = document.getElementsByClassName("timeOrDay");
+        let temps = document.getElementsByClassName("highTemp");
+        let weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
+        for(let i = 0; i < timeOrDay.length; i++){
+            //@ts-ignore
+            let hour = await accurateTime(results.timezone_offset, results.hourly[i + 1].dt);
+            timeOrDay[i].innerHTML = hour.slice(11, 16);
         }
+        for(let i4 = 0; i4 < temps.length; i4++)//@ts-ignore
+        temps[i4].innerHTML = `${Math.floor(results.hourly[i4 + 1].temp)}°${temperatureUnit}`;
+        for(let i5 = 0; i5 < weatherIcons.length; i5++)//@ts-ignore
+        weatherIcons[i5].innerHTML = weatherEmojis(results.hourly[i5 + 1].weather[0].main);
     } catch (err) {
         console.log(err);
-        // error function or default location
         return err;
     }
 }
