@@ -546,6 +546,8 @@ let searchBarContainer = document.getElementById('searchContainer');
 searchBarContainer.appendChild(searchBoxHTML);
 ttSearchBox.on('tomtom.searchbox.resultselected', async function(data) {
     //@ts-ignore
+    city.innerHTML = `${data.data.text}, ${data.data.result.address.countryCode}`;
+    //@ts-ignore
     locationByCords(data.data.result.position.lat, data.data.result.position.lng);
     return;
 });
@@ -579,12 +581,29 @@ window.onload = ()=>{
     locationByCords('42.789379', '-86.107201');
 };
 let locationBtn = document.getElementById("location");
-locationBtn.onclick = ()=>{
+async function getCoords() {
     navigator.geolocation.getCurrentPosition(function(position) {
         previousLatitude = position.coords.latitude.toString();
         previousLongitude = position.coords.longitude.toString();
-        locationByCords(position.coords.latitude, position.coords.longitude);
+        locationByCords(previousLatitude, previousLongitude);
+        setCityName(previousLatitude, previousLongitude);
     });
+}
+async function setCityName(lat, long) {
+    let namedLocation = await fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=1&appid=79994613e7af015836a5a0e8225ca668`, {
+        mode: "cors"
+    });
+    if (namedLocation.status === 200) {
+        let output = await namedLocation.json();
+        if (output[0].country === "US") {
+            city.innerHTML = `${output[0].name}, ${output[0].state}, ${output[0].country}`;
+            return;
+        }
+        city.innerHTML = `${output[0].name}, ${output[0].country}`;
+    }
+}
+locationBtn.onclick = function getCurrentLocation() {
+    getCoords();
 };
 async function locationByCords(lat, long) {
     let apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
@@ -595,28 +614,34 @@ async function locationByCords(lat, long) {
         if (output.status === 200) {
             let data = await output.json();
             console.log(data);
-            //TODO: MIGHT HAVE TO BREAK OUT INTO A SEPARATE REVERSE GEOCODING API :(
-            // @ts-ignore
-            //let dataCity = `${data.name}, ${data.current.sys.country}`
-            // @ts-ignore
-            temperature.innerHTML = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(data.current.temp)}°${temperatureUnit}`;
-            // @ts-ignore
-            dateTime.innerHTML = await accurateTime(data.timezone_offset, data.current.dt);
-            sunrise.innerHTML = "⬆️☀️  Sunrise: " + await (await accurateTime(data.timezone_offset, data.current.sunrise)).slice(11, 16);
-            sunset.innerHTML = "⬇️☀️  Sunset: " + await (await accurateTime(data.timezone_offset, data.current.sunset)).slice(11, 16);
-            humidity.innerHTML = `  🥵  Humidity: ${data.current.humidity}%`;
-            if (units === 'metric') wind.innerHTML = `  🌬️  Wind: ${Math.floor(data.current.wind_speed * 3.6)}${speedUnit}`;
-            else wind.innerHTML = `  🌬️  Wind: ${Math.floor(data.current.wind_speed)}${speedUnit}`;
-            // @ts-ignore
-            weather.innerHTML = `Weather: ${data.current.weather[0].main}`;
-            currentWeatherIcon.innerHTML = weatherEmojis(data.current.weather[0].main);
             previousData = data;
+            currentWeather(previousData);
             oneCall(previousData);
         }
     } catch (err) {
         console.log(err);
         return err;
     }
+}
+async function currentWeather(results) {
+    // @ts-ignore
+    temperature.innerHTML = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(results.current.temp)}°${temperatureUnit}`;
+    // @ts-ignore
+    dateTime.innerHTML = await accurateTime(results.timezone_offset, results.current.dt);
+    //@ts-ignore
+    sunrise.innerHTML = "⬆️☀️  Sunrise: " + await (await accurateTime(results.timezone_offset, results.current.sunrise)).slice(11, 16);
+    //@ts-ignore
+    sunset.innerHTML = "⬇️☀️  Sunset: " + await (await accurateTime(results.timezone_offset, results.current.sunset)).slice(11, 16);
+    //@ts-ignore
+    humidity.innerHTML = `  🥵  Humidity: ${results.current.humidity}%`;
+    if (units === 'metric') //@ts-ignore
+    wind.innerHTML = `  🌬️  Wind: ${Math.floor(results.current.wind_speed * 3.6)}${speedUnit}`;
+    else //@ts-ignore
+    wind.innerHTML = `  🌬️  Wind: ${Math.floor(results.current.wind_speed)}${speedUnit}`;
+    // @ts-ignore
+    weather.innerHTML = `Weather: ${results.current.weather[0].main}`;
+    //@ts-ignore
+    currentWeatherIcon.innerHTML = weatherEmojis(results.current.weather[0].main);
 }
 let sunIcon = document.getElementById("sunIcon");
 let moonIcon = document.getElementById("moonIcon");
@@ -632,13 +657,15 @@ fahrenheit.onclick = ()=>{
     units = 'imperial';
     temperatureUnit = 'F';
     speedUnit = 'mph';
-    locationByCords(previousLatitude, previousLongitude);
+    currentWeather(previousData);
+    oneCall(previousData);
 };
 celsius.onclick = ()=>{
     units = 'metric';
     temperatureUnit = 'C';
     speedUnit = 'kph';
-    locationByCords(previousLatitude, previousLongitude);
+    currentWeather(previousData);
+    oneCall(previousData);
 };
 hourlyDailyToggle.onclick = ()=>{
     if (hourlyDailyToggle.checked == false) {
