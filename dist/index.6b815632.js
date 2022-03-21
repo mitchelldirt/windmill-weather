@@ -525,6 +525,55 @@ var _dateFns = require("date-fns");
 var _webSdkServices = require("@tomtom-international/web-sdk-services");
 var _webSdkPluginSearchbox = require("@tomtom-international/web-sdk-plugin-searchbox");
 var _webSdkPluginSearchboxDefault = parcelHelpers.interopDefault(_webSdkPluginSearchbox);
+const temperature = document.getElementById("temperature");
+const wind = document.getElementById("wind");
+const weather = document.getElementById("weather");
+const hourlyDailyToggle = document.getElementById("hourlyDailyToggle");
+const sunIcon = document.getElementById("sunIcon");
+const moonIcon = document.getElementById("moonIcon");
+const darkModeBtn = document.getElementById("darkModeToggle");
+const htmlTag = document.querySelector("html");
+let city = document.getElementById("city");
+let celsius = document.getElementById("celsius");
+let fahrenheit = document.getElementById("fahrenheit");
+let dateTime = document.getElementById("dateTime");
+let sunrise = document.getElementById("sunrise");
+let sunset = document.getElementById("sunset");
+let humidity = document.getElementById("humidity");
+let currentWeatherIcon = document.getElementById("currentWeatherIcon");
+let searchBarContainer = document.getElementById('searchContainer');
+let locationBtn = document.getElementById("location");
+let units = 'imperial';
+let temperatureUnit = 'F';
+let speedUnit = 'mph';
+let previousLatitude;
+let previousLongitude;
+let previousData;
+window.onload = ()=>{
+    locationByCords('42.789379', '-86.107201');
+};
+darkModeBtn.onclick = (e)=>{
+    e.preventDefault();
+    htmlTag.classList.toggle("dark");
+    sunIcon.classList.toggle("hidden");
+    moonIcon.classList.toggle("hidden");
+};
+fahrenheit.onclick = ()=>{
+    units = 'imperial';
+    temperatureUnit = 'F';
+    speedUnit = 'mph';
+    currentWeather(previousData);
+    oneCall(previousData);
+};
+celsius.onclick = ()=>{
+    units = 'metric';
+    temperatureUnit = 'C';
+    speedUnit = 'kph';
+    currentWeather(previousData);
+    oneCall(previousData);
+};
+// Option for the search bar which includes TomTom fuzzy search and autocomplete
+// Set `idxSet` to Geo and `resultSet` to only how addresses and not places of interest
 let options = {
     idleTimePress: 100,
     minNumberOfCharacters: 3,
@@ -542,7 +591,6 @@ let options = {
 };
 const ttSearchBox = new _webSdkPluginSearchboxDefault.default(_webSdkServices.services, options);
 const searchBoxHTML = ttSearchBox.getSearchBoxHTML();
-let searchBarContainer = document.getElementById('searchContainer');
 searchBarContainer.appendChild(searchBoxHTML);
 ttSearchBox.on('tomtom.searchbox.resultselected', async function(data) {
     //@ts-ignore
@@ -551,24 +599,6 @@ ttSearchBox.on('tomtom.searchbox.resultselected', async function(data) {
     locationByCords(data.data.result.position.lat, data.data.result.position.lng);
     return;
 });
-const temperature = document.getElementById("temperature");
-const wind = document.getElementById("wind");
-const weather = document.getElementById("weather");
-let city = document.getElementById("city");
-let celsius = document.getElementById("celsius");
-let fahrenheit = document.getElementById("fahrenheit");
-let dateTime = document.getElementById("dateTime");
-let sunrise = document.getElementById("sunrise");
-let sunset = document.getElementById("sunset");
-let humidity = document.getElementById("humidity");
-const hourlyDailyToggle = document.getElementById("hourlyDailyToggle");
-let currentWeatherIcon = document.getElementById("currentWeatherIcon");
-let previousLatitude;
-let previousLongitude;
-let units = 'imperial';
-let temperatureUnit = 'F';
-let speedUnit = 'mph';
-let previousData;
 async function accurateTime(timeZoneOffset, unixTime) {
     const localDate = new Date();
     let localDiff = localDate.getTimezoneOffset();
@@ -577,10 +607,7 @@ async function accurateTime(timeZoneOffset, unixTime) {
     let time = _dateFns.fromUnixTime(unixTime + totalDiffUnix).toString().slice(16, 21);
     return `${date} ${time}`;
 }
-window.onload = ()=>{
-    locationByCords('42.789379', '-86.107201');
-};
-let locationBtn = document.getElementById("location");
+// Gets the users latitude and longitude and then runs function to fill the screen with data
 async function getCoords() {
     navigator.geolocation.getCurrentPosition(function(position) {
         previousLatitude = position.coords.latitude.toString();
@@ -606,7 +633,8 @@ locationBtn.onclick = function getCurrentLocation() {
     getCoords();
 };
 async function locationByCords(lat, long) {
-    let apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
+    let apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely,alerts
+  &units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
     try {
         let output = await fetch(apiCall, {
             mode: "cors"
@@ -629,9 +657,9 @@ async function currentWeather(results) {
     // @ts-ignore
     dateTime.innerHTML = await accurateTime(results.timezone_offset, results.current.dt);
     //@ts-ignore
-    sunrise.innerHTML = "⬆️☀️  Sunrise: " + await (await accurateTime(results.timezone_offset, results.current.sunrise)).slice(11, 16);
+    sunrise.innerHTML = "⬆️☀️  Sunrise: " + (await accurateTime(results.timezone_offset, results.current.sunrise)).slice(11, 16);
     //@ts-ignore
-    sunset.innerHTML = "⬇️☀️  Sunset: " + await (await accurateTime(results.timezone_offset, results.current.sunset)).slice(11, 16);
+    sunset.innerHTML = "⬇️☀️  Sunset: " + (await accurateTime(results.timezone_offset, results.current.sunset)).slice(11, 16);
     //@ts-ignore
     humidity.innerHTML = `  🥵  Humidity: ${results.current.humidity}%`;
     if (units === 'metric') //@ts-ignore
@@ -643,30 +671,6 @@ async function currentWeather(results) {
     //@ts-ignore
     currentWeatherIcon.innerHTML = weatherEmojis(results.current.weather[0].main);
 }
-let sunIcon = document.getElementById("sunIcon");
-let moonIcon = document.getElementById("moonIcon");
-let darkModeBtn = document.getElementById("darkModeToggle");
-let htmlTag = document.querySelector("html");
-darkModeBtn.onclick = (e)=>{
-    e.preventDefault();
-    htmlTag.classList.toggle("dark");
-    sunIcon.classList.toggle("hidden");
-    moonIcon.classList.toggle("hidden");
-};
-fahrenheit.onclick = ()=>{
-    units = 'imperial';
-    temperatureUnit = 'F';
-    speedUnit = 'mph';
-    currentWeather(previousData);
-    oneCall(previousData);
-};
-celsius.onclick = ()=>{
-    units = 'metric';
-    temperatureUnit = 'C';
-    speedUnit = 'kph';
-    currentWeather(previousData);
-    oneCall(previousData);
-};
 hourlyDailyToggle.onclick = ()=>{
     if (hourlyDailyToggle.checked == false) {
         // Gets rid of the low temp which should be hidden on the hourly display :)

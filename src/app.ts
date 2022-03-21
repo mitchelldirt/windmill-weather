@@ -3,7 +3,61 @@ import { fromUnixTime } from 'date-fns'
 import { services } from '@tomtom-international/web-sdk-services';
 import SearchBox from '@tomtom-international/web-sdk-plugin-searchbox';
 
+const temperature = document.getElementById("temperature") as HTMLParagraphElement;
+const wind = document.getElementById("wind") as HTMLParagraphElement;
+const weather = document.getElementById("weather") as HTMLParagraphElement;
+const hourlyDailyToggle = document.getElementById("hourlyDailyToggle") as HTMLInputElement;
+const sunIcon = document.getElementById("sunIcon") as HTMLImageElement;
+const moonIcon = document.getElementById("moonIcon") as HTMLImageElement;
+const darkModeBtn = document.getElementById("darkModeToggle") as HTMLButtonElement;
+const htmlTag = document.querySelector("html") as HTMLElement;
+let city = document.getElementById("city") as HTMLHeadingElement;
+let celsius = document.getElementById("celsius") as HTMLInputElement;
+let fahrenheit = document.getElementById("fahrenheit") as HTMLInputElement;
+let dateTime = document.getElementById("dateTime") as HTMLParagraphElement;
+let sunrise = document.getElementById("sunrise") as HTMLParagraphElement;
+let sunset = document.getElementById("sunset") as HTMLParagraphElement;
+let humidity = document.getElementById("humidity") as HTMLParagraphElement;
+let currentWeatherIcon = document.getElementById("currentWeatherIcon") as HTMLDivElement;
+let searchBarContainer = document.getElementById('searchContainer') as HTMLDivElement;
+let locationBtn = document.getElementById("location") as HTMLButtonElement;
 
+let units = 'imperial';
+let temperatureUnit = 'F';
+let speedUnit = 'mph';
+let previousLatitude: string;
+let previousLongitude: string;
+let previousData: JSON;
+
+window.onload = () => {
+  locationByCords('42.789379', '-86.107201')
+}
+
+darkModeBtn.onclick = (e) => {
+  e.preventDefault();
+  htmlTag.classList.toggle("dark");
+  sunIcon.classList.toggle("hidden");
+  moonIcon.classList.toggle("hidden")
+}
+
+fahrenheit.onclick = () => {
+  units = 'imperial'
+  temperatureUnit = 'F'
+  speedUnit = 'mph'
+  currentWeather(previousData);
+  oneCall(previousData);
+}
+
+celsius.onclick = () => {
+  units = 'metric'
+  temperatureUnit = 'C'
+  speedUnit = 'kph'
+  currentWeather(previousData);
+  oneCall(previousData);
+}
+
+// Option for the search bar which includes TomTom fuzzy search and autocomplete
+// Set `idxSet` to Geo and `resultSet` to only how addresses and not places of interest
 let options = {
   idleTimePress: 100,
   minNumberOfCharacters: 3,
@@ -22,7 +76,6 @@ let options = {
 
 const ttSearchBox = new SearchBox(services, options);
 const searchBoxHTML = ttSearchBox.getSearchBoxHTML();
-let searchBarContainer = document.getElementById('searchContainer') as HTMLDivElement
 searchBarContainer.appendChild(searchBoxHTML);
 
 ttSearchBox.on('tomtom.searchbox.resultselected', async function (data) {
@@ -33,44 +86,16 @@ ttSearchBox.on('tomtom.searchbox.resultselected', async function (data) {
   return;
 });
 
-const temperature = document.getElementById("temperature") as HTMLParagraphElement;
-const wind = document.getElementById("wind") as HTMLParagraphElement;
-const weather = document.getElementById("weather") as HTMLParagraphElement;
-let city = document.getElementById("city") as HTMLHeadingElement;
-let celsius = document.getElementById("celsius") as HTMLInputElement;
-let fahrenheit = document.getElementById("fahrenheit") as HTMLInputElement;
-let dateTime = document.getElementById("dateTime") as HTMLParagraphElement;
-let sunrise = document.getElementById("sunrise") as HTMLParagraphElement;
-let sunset = document.getElementById("sunset") as HTMLParagraphElement;
-let humidity = document.getElementById("humidity") as HTMLParagraphElement;
-const hourlyDailyToggle = document.getElementById("hourlyDailyToggle") as HTMLInputElement;
-let currentWeatherIcon = document.getElementById("currentWeatherIcon") as HTMLDivElement;
-let previousLatitude: string;
-let previousLongitude: string;
-let units = 'imperial';
-let temperatureUnit = 'F';
-let speedUnit = 'mph'
-let previousData: JSON;
-
 async function accurateTime(timeZoneOffset: number, unixTime: number): Promise<string> {
   const localDate = new Date();
   let localDiff = localDate.getTimezoneOffset();
-
   let totalDiffUnix = (((timeZoneOffset / 60) + localDiff) * 60);
-
   let date = fromUnixTime(unixTime + totalDiffUnix).toString().slice(0, 10);
   let time = fromUnixTime(unixTime + totalDiffUnix).toString().slice(16, 21);
-
-
   return `${date} ${time}`
 }
 
-window.onload = () => {
-  locationByCords('42.789379', '-86.107201')
-}
-
-let locationBtn = document.getElementById("location") as HTMLButtonElement;
-
+// Gets the users latitude and longitude and then runs function to fill the screen with data
 async function getCoords() {
   navigator.geolocation.getCurrentPosition(function (position) {
     previousLatitude = position.coords.latitude.toString();
@@ -97,7 +122,8 @@ locationBtn.onclick = function getCurrentLocation() {
 }
 
 async function locationByCords(lat: any, long: any) {
-  let apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely,alerts&units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
+  let apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely,alerts
+  &units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
   try {
     let output = await fetch(apiCall, { mode: "cors" });
     if (output.status === 200) {
@@ -113,15 +139,15 @@ async function locationByCords(lat: any, long: any) {
   }
 }
 
-async function currentWeather(results: JSON): Promise<any> {
+async function currentWeather(results: JSON) {
   // @ts-ignore
   temperature.innerHTML = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(results.current.temp)}°${temperatureUnit}`;
   // @ts-ignore
   dateTime.innerHTML = await accurateTime(results.timezone_offset, results.current.dt)
   //@ts-ignore
-  sunrise.innerHTML = "⬆️☀️  Sunrise: " + await (await accurateTime(results.timezone_offset, results.current.sunrise)).slice(11, 16);
+  sunrise.innerHTML = "⬆️☀️  Sunrise: " + (await accurateTime(results.timezone_offset, results.current.sunrise)).slice(11, 16);
   //@ts-ignore
-  sunset.innerHTML = "⬇️☀️  Sunset: " + await (await accurateTime(results.timezone_offset, results.current.sunset)).slice(11, 16);
+  sunset.innerHTML = "⬇️☀️  Sunset: " + (await accurateTime(results.timezone_offset, results.current.sunset)).slice(11, 16);
   //@ts-ignore
   humidity.innerHTML = `  🥵  Humidity: ${results.current.humidity}%`
   if (units === 'metric') {
@@ -137,35 +163,6 @@ async function currentWeather(results: JSON): Promise<any> {
   //@ts-ignore
   currentWeatherIcon.innerHTML = weatherEmojis(results.current.weather[0].main)
 }
-
-let sunIcon = document.getElementById("sunIcon") as HTMLImageElement;
-let moonIcon = document.getElementById("moonIcon") as HTMLImageElement;
-let darkModeBtn = document.getElementById("darkModeToggle") as HTMLButtonElement;
-let htmlTag = document.querySelector("html") as HTMLElement;
-darkModeBtn.onclick = (e) => {
-  e.preventDefault();
-  htmlTag.classList.toggle("dark");
-  sunIcon.classList.toggle("hidden");
-  moonIcon.classList.toggle("hidden")
-}
-
-fahrenheit.onclick = () => {
-  units = 'imperial'
-  temperatureUnit = 'F'
-  speedUnit = 'mph'
-  currentWeather(previousData);
-  oneCall(previousData);
-}
-
-celsius.onclick = () => {
-  units = 'metric'
-  temperatureUnit = 'C'
-  speedUnit = 'kph'
-  currentWeather(previousData);
-  oneCall(previousData);
-}
-
-
 
 hourlyDailyToggle.onclick = () => {
   if (hourlyDailyToggle.checked == false) {
