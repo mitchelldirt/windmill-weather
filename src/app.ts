@@ -29,6 +29,8 @@ let previousLatitude: string;
 let previousLongitude: string;
 let previousData: JSON;
 
+
+//TODO: Finish this type declaration in the types.d.ts file!
 type weatherData = {
   currentWeather: string,
   temperature: string,
