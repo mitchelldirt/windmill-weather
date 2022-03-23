@@ -1,7 +1,8 @@
 import "../dist/output.css";
 import { fromUnixTime } from "date-fns";
+import { weatherData } from "./types";
 import { services } from "@tomtom-international/web-sdk-services";
-import SearchBox from '@tomtom-international/web-sdk-plugin-searchbox';
+import SearchBox from "@tomtom-international/web-sdk-plugin-searchbox";
 
 const temperature = document.getElementById("temperature") as HTMLParagraphElement;
 const wind = document.getElementById("wind") as HTMLParagraphElement;
@@ -27,15 +28,7 @@ let temperatureUnit = "F";
 let speedUnit = "mph";
 let previousLatitude: string;
 let previousLongitude: string;
-let previousData: JSON;
-
-
-//TODO: Finish this type declaration in the types.d.ts file!
-type weatherData = {
-  currentWeather: string,
-  temperature: string,
-
-}
+let previousData: weatherData;
 
 window.onload = () => {
   locationByCords("42.789379", "-86.107201");
@@ -86,10 +79,8 @@ const ttSearchBox = new SearchBox(services, options);
 const searchBoxHTML = ttSearchBox.getSearchBoxHTML();
 searchBarContainer.appendChild(searchBoxHTML);
 
-ttSearchBox.on("tomtom.searchbox.resultselected", async function (data: JSON) {
-  //@ts-ignore
+ttSearchBox.on("tomtom.searchbox.resultselected", async function (data: any) {
   city.innerHTML = `${data.data.text}, ${data.data.result.address.countryCode}`;
-  //@ts-ignore
   locationByCords(data.data.result.position.lat, data.data.result.position.lng);
   return;
 });
@@ -137,7 +128,7 @@ async function locationByCords(lat: string, long: string) {
     if (output.status === 200) {
       const data = await output.json();
       console.log(data);
-      previousData = data;
+      previousData = createWeatherObject(data);
       currentWeather(previousData);
       oneCall(previousData);
     }
@@ -147,29 +138,36 @@ async function locationByCords(lat: string, long: string) {
   }
 }
 
-async function currentWeather(results: JSON) {
-  // @ts-ignore
-  temperature.innerHTML = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(results.current.temp)}°${temperatureUnit}`;
-  // @ts-ignore
-  dateTime.innerHTML = await accurateTime(results.timezone_offset, results.current.dt);
-  //@ts-ignore
-  sunrise.innerHTML = "⬆️☀️  Sunrise: " + (await accurateTime(results.timezone_offset, results.current.sunrise)).slice(11, 16);
-  //@ts-ignore
-  sunset.innerHTML = "⬇️☀️  Sunset: " + (await accurateTime(results.timezone_offset, results.current.sunset)).slice(11, 16);
-  //@ts-ignore
-  humidity.innerHTML = `  🥵  Humidity: ${results.current.humidity}%`;
-  if (units === "metric") {
-    //@ts-ignore
-    wind.innerHTML = `  🌬️  Wind: ${Math.floor((results.current.wind_speed) * (18 / 5))}${speedUnit}`;
-  } else {
-    //@ts-ignore
-    wind.innerHTML = `  🌬️  Wind: ${Math.floor(results.current.wind_speed)}${speedUnit}`;
-  }
+function createWeatherObject(data: any) {
+  const weatherObject = {
+    currentWeather: data.current.weather[0].main,
+    temperature: data.current.temp,
+    timezoneOffset: data.timezone_offset,
+    currentUnixTime: data.current.dt,
+    sunriseUnixTime: data.current.sunrise,
+    sunsetUnixTime: data.current.sunset,
+    humidity: data.current.humidity,
+    wind: data.current.wind_speed,
+    daily: data.daily,
+    hourly: data.hourly
+  };
+  console.log(weatherObject);
+  return weatherObject;
+}
 
-  // @ts-ignore
-  weather.innerHTML = `Weather: ${results.current.weather[0].main}`;
-  //@ts-ignore
-  currentWeatherIcon.innerHTML = weatherEmojis(results.current.weather[0].main);
+async function currentWeather(results: weatherData) {
+  temperature.innerHTML = `<p class="font-semibold">Current Temperature:</p>  ${Math.floor(results.temperature)}°${temperatureUnit}`;
+  dateTime.innerHTML = await accurateTime(results.timezoneOffset, results.currentUnixTime);
+  sunrise.innerHTML = "⬆️☀️  Sunrise: " + (await accurateTime(results.timezoneOffset, results.sunriseUnixTime)).slice(11, 16);
+  sunset.innerHTML = "⬇️☀️  Sunset: " + (await accurateTime(results.timezoneOffset, results.sunsetUnixTime)).slice(11, 16);
+  humidity.innerHTML = `  🥵  Humidity: ${results.humidity}%`;
+  if (units === "metric") {
+    wind.innerHTML = `  🌬️  Wind: ${Math.floor((results.wind) * (18 / 5))}${speedUnit}`;
+  } else {
+    wind.innerHTML = `  🌬️  Wind: ${Math.floor(results.wind)}${speedUnit}`;
+  }
+  weather.innerHTML = `Weather: ${results.currentWeather}`;
+  currentWeatherIcon.innerHTML = weatherEmojis(results.currentWeather);
 }
 
 hourlyDailyToggle.onclick = () => {
@@ -185,7 +183,7 @@ hourlyDailyToggle.onclick = () => {
   oneCall(previousData);
 };
 
-function oneCall(data: JSON): void {
+function oneCall(data: weatherData): void {
   if (hourlyDailyToggle.checked == true) {
     oneCallDaily(data);
   } else {
@@ -193,57 +191,48 @@ function oneCall(data: JSON): void {
   }
 }
 
-async function oneCallDaily(results: JSON) {
+async function oneCallDaily(results: weatherData) {
   const timeOrDay = document.getElementsByClassName("timeOrDay");
   const highTemps = document.getElementsByClassName("highTemp");
   const lowTemps = document.getElementsByClassName("lowTemp");
   const weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
 
   for (let i = 0; i < timeOrDay.length; i++) {
-    //@ts-ignore
-    const day = await accurateTime(results.timezone_offset, results.daily[i + 1].dt);
-    //@ts-ignore
+    const day = await accurateTime(results.timezoneOffset, results.daily[i + 1].dt);
     timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")));
   }
 
   for (let i = 0; i < highTemps.length; i++) {
-    //@ts-ignore
     highTemps[i].innerHTML = `⬆️  ${Math.floor(results.daily[i + 1].temp.max)}°${temperatureUnit}`;
   }
 
   for (let i = 0; i < lowTemps.length; i++) {
     lowTemps[i].classList.toggle("hidden");
-    //@ts-ignore
     lowTemps[i].innerHTML = `⬇️  ${Math.floor(results.daily[i + 1].temp.min)}°${temperatureUnit}`;
   }
 
   for (let i = 0; i < weatherIcons.length; i++) {
-    //@ts-ignore
     weatherIcons[i].innerHTML = weatherEmojis(results.daily[i + 1].weather[0].main);
   }
 }
 
-async function oneCallHourly(results: JSON) {
+async function oneCallHourly(results: weatherData) {
   try {
     const timeOrDay = document.getElementsByClassName("timeOrDay");
     const temps = document.getElementsByClassName("highTemp");
     const weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
 
     for (let i = 0; i < timeOrDay.length; i++) {
-      //@ts-ignore
-
-      const hour = await accurateTime(results.timezone_offset, results.hourly[i + 1].dt);
+      const hour = await accurateTime(results.timezoneOffset, results.hourly[i + 1].dt);
       timeOrDay[i].innerHTML = hour.slice(11, 16);
 
     }
 
     for (let i = 0; i < temps.length; i++) {
-      //@ts-ignore
       temps[i].innerHTML = `${Math.floor(results.hourly[i + 1].temp)}°${temperatureUnit}`;
     }
 
     for (let i = 0; i < weatherIcons.length; i++) {
-      //@ts-ignore
       weatherIcons[i].innerHTML = weatherEmojis(results.hourly[i + 1].weather[0].main);
     }
   } catch (err) {
