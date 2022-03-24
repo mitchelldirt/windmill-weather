@@ -29,6 +29,7 @@ let speedUnit = "mph";
 let previousLatitude: string;
 let previousLongitude: string;
 let previousData: weatherData;
+let hourlyDaily = "hourly";
 
 window.onload = () => {
   locationByCords("42.789379", "-86.107201");
@@ -45,16 +46,14 @@ fahrenheit.onclick = () => {
   units = "imperial";
   temperatureUnit = "F";
   speedUnit = "mph";
-  currentWeather(previousData);
-  oneCall(previousData);
+  locationByCords(previousLatitude, previousLongitude);
 };
 
 celsius.onclick = () => {
   units = "metric";
   temperatureUnit = "C";
   speedUnit = "kph";
-  currentWeather(previousData);
-  oneCall(previousData);
+  locationByCords(previousLatitude, previousLongitude);
 };
 
 // Option for the search bar which includes TomTom fuzzy search and autocomplete
@@ -121,6 +120,8 @@ locationBtn.onclick = function getCurrentLocation() {
 };
 
 async function locationByCords(lat: string, long: string) {
+  previousLatitude = lat;
+  previousLongitude = long;
   const apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely,alerts
   &units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
   try {
@@ -171,20 +172,32 @@ async function currentWeather(results: weatherData) {
 }
 
 hourlyDailyToggle.onclick = () => {
-  if (hourlyDailyToggle.checked == false) {
-    // Gets rid of the low temp which should be hidden on the hourly display :)
-    const lowTemps = document.getElementsByClassName("lowTemp");
-    for (const element of lowTemps) {
-      if (hourlyDailyToggle.checked == false) {
-        element.classList.toggle("hidden");
-      }
-    }
-  }
+  hideShowLowTemp();
   oneCall(previousData);
 };
 
+function hideShowLowTemp() {
+  const lowTemps = document.getElementsByClassName("lowTemp");
+
+  if (hourlyDaily === "hourly") {
+    hourlyDaily = "daily";
+  } else {
+    hourlyDaily = "hourly";
+  }
+
+  if (hourlyDaily === "daily") {
+    for (const element of lowTemps) {
+      element.classList.remove("hidden");
+    }
+  } else {
+    for (const element of lowTemps) {
+      element.classList.add("hidden");
+    }
+  }
+}
+
 function oneCall(data: weatherData): void {
-  if (hourlyDailyToggle.checked == true) {
+  if (hourlyDaily === "daily") {
     oneCallDaily(data);
   } else {
     oneCallHourly(data);
@@ -207,7 +220,6 @@ async function oneCallDaily(results: weatherData) {
   }
 
   for (let i = 0; i < lowTemps.length; i++) {
-    lowTemps[i].classList.toggle("hidden");
     lowTemps[i].innerHTML = `⬇️  ${Math.floor(results.daily[i + 1].temp.min)}°${temperatureUnit}`;
   }
 
@@ -284,6 +296,9 @@ function weatherEmojis(weather: string): string {
       return "🌨️";
       break;
     case "Atmosphere":
+      return "🌫️";
+      break;
+    case "Mist":
       return "🌫️";
       break;
     case "Clear":

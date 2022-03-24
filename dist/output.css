@@ -512,20 +512,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-top: 0.75rem;
 }
 
-.ml-3{
-  margin-left: 0.75rem;
-}
-
-.ml-2{
-  margin-left: 0.5rem;
-}
-
 .mt-1{
   margin-top: 0.25rem;
 }
 
 .mt-4{
   margin-top: 1rem;
+}
+
+.ml-3{
+  margin-left: 0.75rem;
 }
 
 .mt-2{
@@ -540,10 +536,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 2rem;
 }
 
-.mb-1{
-  margin-bottom: 0.25rem;
-}
-
 .flex{
   display: flex;
 }
@@ -554,10 +546,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .h-6{
   height: 1.5rem;
-}
-
-.h-5{
-  height: 1.25rem;
 }
 
 .h-full{
@@ -578,10 +566,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .w-6{
   width: 1.5rem;
-}
-
-.w-64{
-  width: 16rem;
 }
 
 .w-2\/4{
@@ -615,10 +599,6 @@ Ensure the default browser behavior of the `hidden` attribute.
           appearance: none;
 }
 
-.flex-row{
-  flex-direction: row;
-}
-
 .flex-col{
   flex-direction: column;
 }
@@ -643,12 +623,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   gap: 0.5rem;
 }
 
-.rounded-full{
-  border-radius: 9999px;
-}
-
 .rounded-md{
   border-radius: 0.375rem;
+}
+
+.rounded-full{
+  border-radius: 9999px;
 }
 
 .rounded-xl{
@@ -657,11 +637,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .border-2{
   border-width: 2px;
-}
-
-.border-neutral-900{
-  --tw-border-opacity: 1;
-  border-color: rgb(23 23 23 / var(--tw-border-opacity));
 }
 
 .border-black{
@@ -679,27 +654,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(249 115 22 / var(--tw-bg-opacity));
 }
 
-.p-1{
-  padding: 0.25rem;
-}
-
 .p-2{
   padding: 0.5rem;
 }
 
-.py-1{
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-}
-
-.px-1{
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-}
-
-.px-2{
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+.p-1{
+  padding: 0.25rem;
 }
 
 .text-center{
@@ -725,16 +685,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-4xl{
   font-size: 2.25rem;
   line-height: 2.5rem;
-}
-
-.text-xs{
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.text-sm{
-  font-size: 0.875rem;
-  line-height: 1.25rem;
 }
 
 .text-xl{
@@ -780,32 +730,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(249 115 22 / var(--tw-text-opacity));
 }
 
-.text-white{
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
 .duration-300{
   transition-duration: 300ms;
 }
 
 .ease-in-out{
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.placeholder\:text-xs::-moz-placeholder{
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.placeholder\:text-xs:-ms-input-placeholder{
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.placeholder\:text-xs::placeholder{
-  font-size: 0.75rem;
-  line-height: 1rem;
 }
 
 .after\:h-8::after{
@@ -858,11 +788,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-.dark .dark\:border-neutral-50{
-  --tw-border-opacity: 1;
-  border-color: rgb(250 250 250 / var(--tw-border-opacity));
-}
-
 .dark .dark\:bg-slate-800{
   --tw-bg-opacity: 1;
   background-color: rgb(30 41 59 / var(--tw-bg-opacity));
@@ -874,29 +799,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 @media (min-width: 640px){
-  .sm\:text-sm{
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
-
   .sm\:text-xl{
     font-size: 1.25rem;
     line-height: 1.75rem;
-  }
-
-  .sm\:placeholder\:text-sm::-moz-placeholder{
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
-
-  .sm\:placeholder\:text-sm:-ms-input-placeholder{
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
-
-  .sm\:placeholder\:text-sm::placeholder{
-    font-size: 0.875rem;
-    line-height: 1.25rem;
   }
 }
 
@@ -905,16 +810,8 @@ Ensure the default browser behavior of the `hidden` attribute.
     height: 2.5rem;
   }
 
-  .md\:h-7{
-    height: 1.75rem;
-  }
-
   .md\:w-10{
     width: 2.5rem;
-  }
-
-  .md\:w-72{
-    width: 18rem;
   }
 
   .md\:w-1\/6{
@@ -934,11 +831,6 @@ Ensure the default browser behavior of the `hidden` attribute.
     line-height: 1;
   }
 
-  .md\:text-base{
-    font-size: 1rem;
-    line-height: 1.5rem;
-  }
-
   .md\:text-3xl{
     font-size: 1.875rem;
     line-height: 2.25rem;
@@ -952,21 +844,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   .md\:text-xl{
     font-size: 1.25rem;
     line-height: 1.75rem;
-  }
-
-  .md\:placeholder\:text-base::-moz-placeholder{
-    font-size: 1rem;
-    line-height: 1.5rem;
-  }
-
-  .md\:placeholder\:text-base:-ms-input-placeholder{
-    font-size: 1rem;
-    line-height: 1.5rem;
-  }
-
-  .md\:placeholder\:text-base::placeholder{
-    font-size: 1rem;
-    line-height: 1.5rem;
   }
 }
 
@@ -983,11 +860,6 @@ Ensure the default browser behavior of the `hidden` attribute.
     top: 1rem;
   }
 
-  .lg\:text-lg{
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-  }
-
   .lg\:text-4xl{
     font-size: 2.25rem;
     line-height: 2.5rem;
@@ -1000,21 +872,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .lg\:text-xl{
     font-size: 1.25rem;
-    line-height: 1.75rem;
-  }
-
-  .lg\:placeholder\:text-lg::-moz-placeholder{
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-  }
-
-  .lg\:placeholder\:text-lg:-ms-input-placeholder{
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-  }
-
-  .lg\:placeholder\:text-lg::placeholder{
-    font-size: 1.125rem;
     line-height: 1.75rem;
   }
 }

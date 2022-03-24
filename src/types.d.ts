@@ -1,4 +1,4 @@
-declare module '@tomtom-international/web-sdk-plugin-searchbox'
+declare module "@tomtom-international/web-sdk-plugin-searchbox"
 
 export type weatherData = {
     currentWeather: string,

@@ -549,6 +549,7 @@ let speedUnit = "mph";
 let previousLatitude;
 let previousLongitude;
 let previousData;
+let hourlyDaily = "hourly";
 window.onload = ()=>{
     locationByCords("42.789379", "-86.107201");
 };
@@ -562,15 +563,13 @@ fahrenheit.onclick = ()=>{
     units = "imperial";
     temperatureUnit = "F";
     speedUnit = "mph";
-    currentWeather(previousData);
-    oneCall(previousData);
+    locationByCords(previousLatitude, previousLongitude);
 };
 celsius.onclick = ()=>{
     units = "metric";
     temperatureUnit = "C";
     speedUnit = "kph";
-    currentWeather(previousData);
-    oneCall(previousData);
+    locationByCords(previousLatitude, previousLongitude);
 };
 // Option for the search bar which includes TomTom fuzzy search and autocomplete
 // Set `idxSet` to Geo and `resultSet` to only how addresses and not places of interest
@@ -631,6 +630,8 @@ locationBtn.onclick = function getCurrentLocation() {
     getCoords();
 };
 async function locationByCords(lat, long) {
+    previousLatitude = lat;
+    previousLongitude = long;
     const apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&exclude=minutely,alerts
   &units=${units}&appid=79994613e7af015836a5a0e8225ca668`;
     try {
@@ -677,15 +678,18 @@ async function currentWeather(results) {
     currentWeatherIcon.innerHTML = weatherEmojis(results.currentWeather);
 }
 hourlyDailyToggle.onclick = ()=>{
-    if (hourlyDailyToggle.checked == false) {
-        // Gets rid of the low temp which should be hidden on the hourly display :)
-        const lowTemps = document.getElementsByClassName("lowTemp");
-        for (const element of lowTemps)if (hourlyDailyToggle.checked == false) element.classList.toggle("hidden");
-    }
+    hideShowLowTemp();
     oneCall(previousData);
 };
+function hideShowLowTemp() {
+    const lowTemps = document.getElementsByClassName("lowTemp");
+    if (hourlyDaily === "hourly") hourlyDaily = "daily";
+    else hourlyDaily = "hourly";
+    if (hourlyDaily === "daily") for (const element of lowTemps)element.classList.remove("hidden");
+    else for (const element1 of lowTemps)element1.classList.add("hidden");
+}
 function oneCall(data) {
-    if (hourlyDailyToggle.checked == true) oneCallDaily(data);
+    if (hourlyDaily === "daily") oneCallDaily(data);
     else oneCallHourly(data);
 }
 async function oneCallDaily(results) {
@@ -698,10 +702,7 @@ async function oneCallDaily(results) {
         timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")));
     }
     for(let i1 = 0; i1 < highTemps.length; i1++)highTemps[i1].innerHTML = `⬆️  ${Math.floor(results.daily[i1 + 1].temp.max)}°${temperatureUnit}`;
-    for(let i2 = 0; i2 < lowTemps.length; i2++){
-        lowTemps[i2].classList.toggle("hidden");
-        lowTemps[i2].innerHTML = `⬇️  ${Math.floor(results.daily[i2 + 1].temp.min)}°${temperatureUnit}`;
-    }
+    for(let i2 = 0; i2 < lowTemps.length; i2++)lowTemps[i2].innerHTML = `⬇️  ${Math.floor(results.daily[i2 + 1].temp.min)}°${temperatureUnit}`;
     for(let i3 = 0; i3 < weatherIcons.length; i3++)weatherIcons[i3].innerHTML = weatherEmojis(results.daily[i3 + 1].weather[0].main);
 }
 async function oneCallHourly(results) {
@@ -751,6 +752,8 @@ function weatherEmojis(weather1) {
         case "Snow":
             return "🌨️";
         case "Atmosphere":
+            return "🌫️";
+        case "Mist":
             return "🌫️";
         case "Clear":
             if (currentTime >= 17) return "🌕";
