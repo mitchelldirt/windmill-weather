@@ -10,13 +10,15 @@
   <link rel="stylesheet" href="../node_modules/@tomtom-international/web-sdk-plugin-searchbox/dist/SearchBox.css">
 </head>
 
-<body class="text-black dark:text-white min-h-screen m-0 relative bg-neutral-100 dark:bg-slate-800">
+<body style="background-image: url('./assets/download.jpeg');"
+  class="text-black dark:text-white min-h-screen m-0 relative bg-neutral-100 dark:bg-slate-800">
   <main class=" flex items-center justify-center flex-col">
     <div>
       <button id="location"><img class="w-6 h-6 md:w-10 md:h-10" src="./assets/placeholder.png"
           alt="Location pin. Use to get current locations weather"></button>
       <span class="text-orange-500 font-custom font-bold text-4xl md:text-6xl ml-4 mr-4">Windmill Weather</span>
-      <button class="w-6 h-6 md:w-10 md:h-10" id="darkModeToggle"><img id="moonIcon" class="w-6 h-6 md:w-10 md:h-10" src="./assets/moon.png"
+      <button class="w-6 h-6 md:w-10 md:h-10" id="darkModeToggle"><img id="moonIcon" class="w-6 h-6 md:w-10 md:h-10"
+          src="./assets/moon.png"
           alt="cute smiling moon. Clicking this changes it to a sun and turns the background to dark mode"><img
           id="sunIcon" class="hidden w-6 h-6 md:w-10 md:h-10" src="./assets/sun.png"
           alt="cute smiling sun. Clicking this changes it to a moon and turns the background to light mode"></button>
@@ -64,12 +66,22 @@
       </label>
     </div>
 
-    <div class="flex flex-col md:flex-row items-center gap-2 md:justify-around flex-wrap w-full mb-8 mt-8">
-      <div class="border-2 rounded-xl border-black w-3/4 md:w-1/6 h-80 flex flex-col justify-between items-center">
+    <div class="flex flex-col items-center gap-2 md:justify-around flex-wrap w-full mb-8 mt-8">
+
+
+      <div class="flex flex-row">
+        <div class="hourlyDailyWeather text-6xl"></div>
         <h2 class=" timeOrDay mt-2 text-3xl sm:text-xl lg:text-2xl xl:text-3xl font-bold"></h2>
-        <p class=" highTemp text-xl"></p>
-        <p class="hidden lowTemp text-lg"></p>
-        <div class="hourlyDailyWeather text-8xl"></div>
+        <div class="flex flex-row">
+          <div class="bg-blue-500 w-2/5 p-1 text-center">
+            <p class="hidden lowTemp text-lg"></p>
+          </div>
+          <div class="bg-orange-500 text-right" style="width: 26%;">
+            <p class=" highTemp text-xl text-right"></p>
+          </div>
+
+        </div>
+
       </div>
 
       <div class="border-2 rounded-xl border-black w-3/4 md:w-1/6 h-80 flex flex-col justify-between items-center">

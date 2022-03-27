@@ -1185,6 +1185,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 4rem;
 }
 
+.w-2\/5{
+  width: 40%;
+}
+
 .w-3\/4{
   width: 75%;
 }
@@ -1202,6 +1206,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
+}
+
+.flex-row{
+  flex-direction: row;
 }
 
 .flex-col{
@@ -1259,6 +1267,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(249 115 22 / var(--tw-bg-opacity));
 }
 
+.bg-blue-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}
+
 .p-2{
   padding: 0.5rem;
 }
@@ -1269,6 +1282,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .text-center{
   text-align: center;
+}
+
+.text-right{
+  text-align: right;
 }
 
 .align-middle{
@@ -1307,6 +1324,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 1.75rem;
 }
 
+.text-5xl{
+  font-size: 3rem;
+  line-height: 1;
+}
+
 .text-3xl{
   font-size: 1.875rem;
   line-height: 2.25rem;
@@ -1314,6 +1336,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .text-8xl{
   font-size: 6rem;
+  line-height: 1;
+}
+
+.text-6xl{
+  font-size: 3.75rem;
   line-height: 1;
 }
 
@@ -1421,10 +1448,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .md\:w-1\/6{
     width: 16.666667%;
-  }
-
-  .md\:flex-row{
-    flex-direction: row;
   }
 
   .md\:justify-around{

@@ -701,8 +701,8 @@ async function oneCallDaily(results) {
         const day = await accurateTime(results.timezoneOffset, results.daily[i + 1].dt);
         timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")));
     }
-    for(let i1 = 0; i1 < highTemps.length; i1++)highTemps[i1].innerHTML = `⬆️  ${Math.floor(results.daily[i1 + 1].temp.max)}°${temperatureUnit}`;
-    for(let i2 = 0; i2 < lowTemps.length; i2++)lowTemps[i2].innerHTML = `⬇️  ${Math.floor(results.daily[i2 + 1].temp.min)}°${temperatureUnit}`;
+    for(let i1 = 0; i1 < highTemps.length; i1++)highTemps[i1].innerHTML = `${Math.floor(results.daily[i1 + 1].temp.max)}°${temperatureUnit}`;
+    for(let i2 = 0; i2 < lowTemps.length; i2++)lowTemps[i2].innerHTML = `${Math.floor(results.daily[i2 + 1].temp.min)}°${temperatureUnit}`;
     for(let i3 = 0; i3 < weatherIcons.length; i3++)weatherIcons[i3].innerHTML = weatherEmojis(results.daily[i3 + 1].weather[0].main);
 }
 async function oneCallHourly(results) {

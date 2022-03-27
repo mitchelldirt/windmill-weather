@@ -216,11 +216,11 @@ async function oneCallDaily(results: weatherData) {
   }
 
   for (let i = 0; i < highTemps.length; i++) {
-    highTemps[i].innerHTML = `⬆️  ${Math.floor(results.daily[i + 1].temp.max)}°${temperatureUnit}`;
+    highTemps[i].innerHTML = `${Math.floor(results.daily[i + 1].temp.max)}°${temperatureUnit}`;
   }
 
   for (let i = 0; i < lowTemps.length; i++) {
-    lowTemps[i].innerHTML = `⬇️  ${Math.floor(results.daily[i + 1].temp.min)}°${temperatureUnit}`;
+    lowTemps[i].innerHTML = `${Math.floor(results.daily[i + 1].temp.min)}°${temperatureUnit}`;
   }
 
   for (let i = 0; i < weatherIcons.length; i++) {
