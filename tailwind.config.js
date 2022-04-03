@@ -9,7 +9,7 @@ module.exports = {
       },
       backgroundImage: {
         "light": "url('../src/assets/download.jpeg')",
-        "dark": "url('../src/assets/darkSky.jpeg')",
+        "dark": "url('../src/assets/darkClouds.jpeg')",
       },
     },
   },

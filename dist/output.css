@@ -807,7 +807,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .dark .dark\:bg-dark{
-  background-image: url('../src/assets/darkSky.jpeg');
+  background-image: url('../src/assets/darkClouds.jpeg');
 }
 
 .dark .dark\:text-white{
