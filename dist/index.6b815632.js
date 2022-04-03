@@ -543,6 +543,7 @@ const humidity = document.getElementById("humidity");
 const currentWeatherIcon = document.getElementById("currentWeatherIcon");
 const searchBarContainer = document.getElementById("searchContainer");
 const locationBtn = document.getElementById("location");
+const body = document.querySelector('body');
 let units = "imperial";
 let temperatureUnit = "F";
 let speedUnit = "mph";
@@ -692,30 +693,66 @@ function oneCall(data) {
     if (hourlyDaily === "daily") oneCallDaily(data);
     else oneCallHourly(data);
 }
+// Buncha extra code in here to set the width of the temperature bars
 async function oneCallDaily(results) {
+    let previousDailyTemp = Math.floor(results.daily[1].temp.max);
+    let tempMultiplier = [
+        1.8,
+        1.6
+    ];
     const timeOrDay = document.getElementsByClassName("timeOrDay");
     const highTemps = document.getElementsByClassName("highTemp");
     const lowTemps = document.getElementsByClassName("lowTemp");
     const weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
-    for(let i = 0; i < timeOrDay.length; i++){
-        const day = await accurateTime(results.timezoneOffset, results.daily[i + 1].dt);
-        timeOrDay[i].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")));
+    for(let i = 0; i < highTemps.length; i++)if (Math.floor(results.daily[i + 1].temp.max) < 30) tempMultiplier = [
+        2.8,
+        2.6
+    ];
+    for(let i1 = 0; i1 < timeOrDay.length; i1++){
+        const day = await accurateTime(results.timezoneOffset, results.daily[i1 + 1].dt);
+        timeOrDay[i1].innerHTML = daysOfTheWeek(day.slice(0, day.indexOf(" ")));
     }
-    for(let i1 = 0; i1 < highTemps.length; i1++)highTemps[i1].innerHTML = `${Math.floor(results.daily[i1 + 1].temp.max)}°${temperatureUnit}`;
-    for(let i2 = 0; i2 < lowTemps.length; i2++)lowTemps[i2].innerHTML = `${Math.floor(results.daily[i2 + 1].temp.min)}°${temperatureUnit}`;
-    for(let i3 = 0; i3 < weatherIcons.length; i3++)weatherIcons[i3].innerHTML = weatherEmojis(results.daily[i3 + 1].weather[0].main);
+    for(let i2 = 0; i2 < highTemps.length; i2++){
+        const currentHourlyTemp = Math.floor(results.daily[i2 + 1].temp.max);
+        let unitMultiplier = 1;
+        if (temperatureUnit === "C") unitMultiplier = 33.8;
+        highTemps[i2].innerHTML = `${currentHourlyTemp}°${temperatureUnit}`;
+        if (currentHourlyTemp >= previousDailyTemp) highTemps[i2].setAttribute("style", `width: ${(currentHourlyTemp + unitMultiplier) * tempMultiplier[0]}px; min-width: fit-content`);
+        else highTemps[i2].setAttribute("style", `width: ${(currentHourlyTemp + unitMultiplier) * tempMultiplier[1]}px; min-width: fit-content`);
+        previousDailyTemp = currentHourlyTemp;
+    }
+    for(let i3 = 0; i3 < lowTemps.length; i3++)lowTemps[i3].innerHTML = `${Math.floor(results.daily[i3 + 1].temp.min)}°${temperatureUnit}`;
+    for(let i4 = 0; i4 < weatherIcons.length; i4++)weatherIcons[i4].innerHTML = weatherEmojis(results.daily[i4 + 1].weather[0].main);
 }
+// Buncha extra code in here to set the width of the temperature bars
 async function oneCallHourly(results) {
+    let previousHourlyTemp = Math.floor(results.hourly[1].temp);
+    let tempMultiplier = [
+        1.8,
+        1.6
+    ];
     try {
         const timeOrDay = document.getElementsByClassName("timeOrDay");
         const temps = document.getElementsByClassName("highTemp");
         const weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
-        for(let i = 0; i < timeOrDay.length; i++){
-            const hour = await accurateTime(results.timezoneOffset, results.hourly[i + 1].dt);
-            timeOrDay[i].innerHTML = hour.slice(11, 16);
+        for(let i = 0; i < temps.length; i++)if (Math.floor(results.daily[i + 1].temp.max) < 30) tempMultiplier = [
+            2.8,
+            2.6
+        ];
+        for(let i5 = 0; i5 < timeOrDay.length; i5++){
+            const hour = await accurateTime(results.timezoneOffset, results.hourly[i5 + 1].dt);
+            timeOrDay[i5].innerHTML = hour.slice(11, 16);
         }
-        for(let i4 = 0; i4 < temps.length; i4++)temps[i4].innerHTML = `${Math.floor(results.hourly[i4 + 1].temp)}°${temperatureUnit}`;
-        for(let i5 = 0; i5 < weatherIcons.length; i5++)weatherIcons[i5].innerHTML = weatherEmojis(results.hourly[i5 + 1].weather[0].main);
+        for(let i6 = 0; i6 < temps.length; i6++){
+            const currentHourlyTemp = Math.floor(results.hourly[i6 + 1].temp);
+            let unitMultiplier = 1;
+            if (temperatureUnit === "C") unitMultiplier = 33.8;
+            temps[i6].innerHTML = `${currentHourlyTemp}°${temperatureUnit}`;
+            if (currentHourlyTemp > previousHourlyTemp) temps[i6].setAttribute("style", `width: ${(currentHourlyTemp + unitMultiplier) * tempMultiplier[0]}px; min-width: fit-content`);
+            else temps[i6].setAttribute("style", `width: ${(currentHourlyTemp + unitMultiplier) * tempMultiplier[1]}px; min-width: fit-content`);
+            previousHourlyTemp = currentHourlyTemp;
+        }
+        for(let i7 = 0; i7 < weatherIcons.length; i7++)weatherIcons[i7].innerHTML = weatherEmojis(results.hourly[i7 + 1].weather[0].main);
     } catch (err) {
         console.log(err);
         return err;

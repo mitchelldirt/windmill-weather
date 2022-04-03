@@ -10,8 +10,7 @@
   <link rel="stylesheet" href="../node_modules/@tomtom-international/web-sdk-plugin-searchbox/dist/SearchBox.css">
 </head>
 
-<body style="background-image: url('./assets/download.jpeg');"
-  class="text-black dark:text-white min-h-screen m-0 relative bg-neutral-100 dark:bg-slate-800">
+<body class="text-black dark:text-white min-h-screen m-0 relative bg-light dark:bg-dark">
   <main class=" flex items-center justify-center flex-col">
     <div>
       <button id="location"><img class="w-6 h-6 md:w-10 md:h-10" src="./assets/placeholder.png"
@@ -66,81 +65,105 @@
       </label>
     </div>
 
-    <div class="flex flex-col items-center gap-2 md:justify-around flex-wrap w-full mb-8 mt-8">
+    <div class="flex flex-row items-start mb-8 mt-8 justify-center">
+      <div class="flex flex-col gap-2">
+        <div class="hourlyDailyWeather text-3xl text-right relative right-2 h-11"></div>
+        <div class="hourlyDailyWeather text-4xl text-right relative right-2 h-11"></div>
+        <div class="hourlyDailyWeather text-4xl text-right relative right-2 h-11"></div>
+        <div class="hourlyDailyWeather text-4xl text-right relative right-2 h-11"></div>
+        <div class="hourlyDailyWeather text-4xl text-right relative right-2 h-11"></div>
+        <div class="hourlyDailyWeather text-4xl text-right relative right-2 h-11"></div>
+        <div class="hourlyDailyWeather text-4xl text-right relative right-2 h-11"></div>
+      </div>
 
-      <div class="grid grid-rows-1 grid-cols-3 items-center">
-        <div class="hourlyDailyWeather text-4xl text-right relative right-2"></div>
-        <div>
-          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold text-center"></h2>
+      <div class="flex flex-col gap-2">
+        <div class="h-11">
+          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold text-left"></h2>
         </div>
-        <div class="flex flex-row relative left-2">
-          <div class="bg-blue-500 w-fit text-center h-fit">
-            <p class="hidden lowTemp text-lg"></p>
-          </div>
-          <div class="bg-orange-500 text-right h-fit w-full" style="width: 26%;">
-            <p class=" highTemp text-xl text-right"></p>
-          </div>
+        <div class="h-11">
+          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold text-left"></h2>
+        </div>
+        <div class="h-11">
+          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold text-left"></h2>
+        </div>
+        <div class="h-11">
+          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold text-left"></h2>
+        </div>
+        <div class="h-11">
+          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold text-left"></h2>
+        </div>
+        <div class="h-11">
+          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold text-left"></h2>
+        </div>
+        <div class="h-11">
+          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold text-left"></h2>
         </div>
       </div>
 
-      <div class="grid grid-rows-1 grid-cols-3 items-center">
-        <div class="hourlyDailyWeather text-4xl text-right relative right-2"></div>
-        <div>
-          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold"></h2>
-        </div>
-        <div class="flex flex-row relative left-2">
+      <div class="flex flex-col gap-2">
+        <div class="flex flex-row relative left-2 leading-9 h-11">
           <div class="bg-blue-500 w-fit text-center h-fit">
             <p class="hidden lowTemp text-lg"></p>
           </div>
-          <div class="bg-orange-500 text-right h-fit w-full" style="width: 26%;">
+          <div class="bg-orange-500 text-right h-fit">
             <p class=" highTemp text-xl text-right"></p>
           </div>
         </div>
-      </div>
 
-      <div class="grid grid-rows-1 grid-cols-3 items-center">
-        <div class="hourlyDailyWeather text-4xl text-right relative right-2"></div>
-        <div>
-          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold"></h2>
-        </div>
-        <div class="flex flex-row relative left-2">
+        <div class="flex flex-row relative left-2 h-11">
           <div class="bg-blue-500 w-fit text-center h-fit">
             <p class="hidden lowTemp text-lg"></p>
           </div>
-          <div class="bg-orange-500 text-right h-fit w-full" style="width: 26%;">
+          <div class="bg-orange-500 text-right h-fit">
             <p class=" highTemp text-xl text-right"></p>
           </div>
         </div>
-      </div>
 
-      <div class="grid grid-rows-1 grid-cols-3 items-center">
-        <div class="hourlyDailyWeather text-4xl text-right relative right-2"></div>
-        <div>
-          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold"></h2>
-        </div>
-        <div class="flex flex-row relative left-2">
+        <div class="flex flex-row relative left-2 h-11">
           <div class="bg-blue-500 w-fit text-center h-fit">
             <p class="hidden lowTemp text-lg"></p>
           </div>
-          <div class="bg-orange-500 text-right h-fit w-full" style="width: 26%;">
+          <div class="bg-orange-500 text-right h-fit">
             <p class=" highTemp text-xl text-right"></p>
           </div>
         </div>
-      </div>
 
-      <div class="grid grid-rows-1 grid-cols-3 items-center">
-        <div class="hourlyDailyWeather text-4xl text-right relative right-2"></div>
-        <div>
-          <h2 class=" timeOrDay text-xl sm:text-xl lg:text-2xl xl:text-3xl font-bold"></h2>
-        </div>
-        <div class="flex flex-row relative left-2">
+        <div class="flex flex-row relative left-2 h-11">
           <div class="bg-blue-500 w-fit text-center h-fit">
             <p class="hidden lowTemp text-lg"></p>
           </div>
-          <div class="bg-orange-500 text-right h-fit w-full" style="width: 26%;">
+          <div class="bg-orange-500 text-right h-fit">
             <p class=" highTemp text-xl text-right"></p>
           </div>
         </div>
+
+        <div class="flex flex-row relative left-2 h-11">
+          <div class="bg-blue-500 w-fit text-center h-fit">
+            <p class="hidden lowTemp text-lg"></p>
+          </div>
+          <div class="bg-orange-500 text-right h-fit">
+            <p class=" highTemp text-xl text-right"></p>
+          </div>
+        </div>
+
+        <div class="flex flex-row relative left-2 h-11">
+          <div class="bg-blue-500 w-fit text-center h-fit">
+            <p class="hidden lowTemp text-lg"></p>
+          </div>
+          <div class="bg-orange-500 text-right h-fit">
+            <p class=" highTemp text-xl text-right"></p>
+          </div>
+        </div>
+
+        <div class="flex flex-row relative left-2 h-11">
+          <div class="bg-blue-500 w-fit text-center h-fit">
+            <p class="hidden lowTemp text-lg"></p>
+          </div>
+          <div class="bg-orange-500 text-right h-fit">
+            <p class=" highTemp text-xl text-right"></p>
+          </div>
+        </div>
+
       </div>
     </div>
   </main>

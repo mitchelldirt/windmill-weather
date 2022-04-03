@@ -22,6 +22,7 @@ const humidity = document.getElementById("humidity") as HTMLParagraphElement;
 const currentWeatherIcon = document.getElementById("currentWeatherIcon") as HTMLDivElement;
 const searchBarContainer = document.getElementById("searchContainer") as HTMLDivElement;
 const locationBtn = document.getElementById("location") as HTMLButtonElement;
+const body = document.querySelector('body')
 
 let units = "imperial";
 let temperatureUnit = "F";
@@ -204,11 +205,21 @@ function oneCall(data: weatherData): void {
   }
 }
 
+// Buncha extra code in here to set the width of the temperature bars
 async function oneCallDaily(results: weatherData) {
+  let previousDailyTemp = Math.floor(results.daily[1].temp.max);
+  let tempMultiplier = [1.8, 1.6];
+
   const timeOrDay = document.getElementsByClassName("timeOrDay");
   const highTemps = document.getElementsByClassName("highTemp");
   const lowTemps = document.getElementsByClassName("lowTemp");
   const weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
+
+  for (let i = 0; i < highTemps.length; i++) {
+    if (Math.floor(results.daily[i + 1].temp.max) < 30) {
+      tempMultiplier = [2.8, 2.6];
+    }
+  }
 
   for (let i = 0; i < timeOrDay.length; i++) {
     const day = await accurateTime(results.timezoneOffset, results.daily[i + 1].dt);
@@ -216,7 +227,18 @@ async function oneCallDaily(results: weatherData) {
   }
 
   for (let i = 0; i < highTemps.length; i++) {
-    highTemps[i].innerHTML = `${Math.floor(results.daily[i + 1].temp.max)}°${temperatureUnit}`;
+    const currentHourlyTemp = Math.floor(results.daily[i + 1].temp.max);
+    let unitMultiplier = 1;
+    if (temperatureUnit === "C") {
+      unitMultiplier = (1.8 + 32);
+    }
+    highTemps[i].innerHTML = `${currentHourlyTemp}°${temperatureUnit}`;
+    if (currentHourlyTemp >= previousDailyTemp) {
+      highTemps[i].setAttribute("style", `width: ${((currentHourlyTemp + unitMultiplier) * tempMultiplier[0])}px; min-width: fit-content`);
+    } else {
+      highTemps[i].setAttribute("style", `width: ${((currentHourlyTemp + unitMultiplier) * tempMultiplier[1])}px; min-width: fit-content`);
+    }
+    previousDailyTemp = currentHourlyTemp;
   }
 
   for (let i = 0; i < lowTemps.length; i++) {
@@ -228,11 +250,20 @@ async function oneCallDaily(results: weatherData) {
   }
 }
 
+// Buncha extra code in here to set the width of the temperature bars
 async function oneCallHourly(results: weatherData) {
+  let previousHourlyTemp = Math.floor(results.hourly[1].temp);
+  let tempMultiplier = [1.8, 1.6];
   try {
     const timeOrDay = document.getElementsByClassName("timeOrDay");
     const temps = document.getElementsByClassName("highTemp");
     const weatherIcons = document.getElementsByClassName("hourlyDailyWeather");
+
+    for (let i = 0; i < temps.length; i++) {
+      if (Math.floor(results.daily[i + 1].temp.max) < 30) {
+        tempMultiplier = [2.8, 2.6];
+      }
+    }
 
     for (let i = 0; i < timeOrDay.length; i++) {
       const hour = await accurateTime(results.timezoneOffset, results.hourly[i + 1].dt);
@@ -241,7 +272,18 @@ async function oneCallHourly(results: weatherData) {
     }
 
     for (let i = 0; i < temps.length; i++) {
-      temps[i].innerHTML = `${Math.floor(results.hourly[i + 1].temp)}°${temperatureUnit}`;
+      const currentHourlyTemp = Math.floor(results.hourly[i + 1].temp);
+      let unitMultiplier = 1;
+    if (temperatureUnit === "C") {
+      unitMultiplier = (1.8 + 32);
+    }
+      temps[i].innerHTML = `${currentHourlyTemp}°${temperatureUnit}`;
+      if (currentHourlyTemp > previousHourlyTemp) {
+        temps[i].setAttribute("style", `width: ${((currentHourlyTemp + unitMultiplier) * tempMultiplier[0])}px; min-width: fit-content`);
+      } else {
+        temps[i].setAttribute("style", `width: ${((currentHourlyTemp + unitMultiplier) * tempMultiplier[1])}px; min-width: fit-content`);
+      }
+      previousHourlyTemp = currentHourlyTemp;
     }
 
     for (let i = 0; i < weatherIcons.length; i++) {
