@@ -22,7 +22,6 @@ const humidity = document.getElementById("humidity") as HTMLParagraphElement;
 const currentWeatherIcon = document.getElementById("currentWeatherIcon") as HTMLDivElement;
 const searchBarContainer = document.getElementById("searchContainer") as HTMLDivElement;
 const locationBtn = document.getElementById("location") as HTMLButtonElement;
-const body = document.querySelector('body')
 
 let units = "imperial";
 let temperatureUnit = "F";
@@ -274,9 +273,9 @@ async function oneCallHourly(results: weatherData) {
     for (let i = 0; i < temps.length; i++) {
       const currentHourlyTemp = Math.floor(results.hourly[i + 1].temp);
       let unitMultiplier = 1;
-    if (temperatureUnit === "C") {
-      unitMultiplier = (1.8 + 32);
-    }
+      if (temperatureUnit === "C") {
+        unitMultiplier = (1.8 + 32);
+      }
       temps[i].innerHTML = `${currentHourlyTemp}°${temperatureUnit}`;
       if (currentHourlyTemp > previousHourlyTemp) {
         temps[i].setAttribute("style", `width: ${((currentHourlyTemp + unitMultiplier) * tempMultiplier[0])}px; min-width: fit-content`);

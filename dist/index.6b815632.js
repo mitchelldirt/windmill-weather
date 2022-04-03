@@ -543,7 +543,6 @@ const humidity = document.getElementById("humidity");
 const currentWeatherIcon = document.getElementById("currentWeatherIcon");
 const searchBarContainer = document.getElementById("searchContainer");
 const locationBtn = document.getElementById("location");
-const body = document.querySelector('body');
 let units = "imperial";
 let temperatureUnit = "F";
 let speedUnit = "mph";
