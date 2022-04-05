@@ -33,7 +33,7 @@ let previousData: weatherData;
 let hourlyDaily = "hourly";
 
 window.onload = () => {
-  locationByCords("42.789379", "-86.107201");
+  locationByCords("52.377956", "4.897070");
 };
 
 darkModeBtn.onclick = (e) => {
@@ -78,6 +78,7 @@ const options = {
 
 const ttSearchBox = new SearchBox(services, options);
 const searchBoxHTML = ttSearchBox.getSearchBoxHTML();
+searchBoxHTML.classList.add("dark:text-black")
 searchBarContainer.appendChild(searchBoxHTML);
 
 ttSearchBox.on("tomtom.searchbox.resultselected", async function (data: any) {
