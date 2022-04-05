@@ -552,7 +552,7 @@ let previousLongitude;
 let previousData;
 let hourlyDaily = "hourly";
 window.onload = ()=>{
-    locationByCords("42.789379", "-86.107201");
+    locationByCords("52.377956", "4.897070");
 };
 darkModeBtn.onclick = (e)=>{
     dlmText.innerHTML === "Dark" ? dlmText.innerHTML = "Light" : dlmText.innerHTML = "Dark";
@@ -592,6 +592,7 @@ const options = {
 };
 const ttSearchBox = new _webSdkPluginSearchboxDefault.default(_webSdkServices.services, options);
 const searchBoxHTML = ttSearchBox.getSearchBoxHTML();
+searchBoxHTML.classList.add("dark:text-black");
 searchBarContainer.appendChild(searchBoxHTML);
 ttSearchBox.on("tomtom.searchbox.resultselected", async function(data) {
     city.innerHTML = `${data.data.text}, ${data.data.result.address.countryCode}`;
