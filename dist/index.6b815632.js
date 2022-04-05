@@ -540,6 +540,7 @@ const dateTime = document.getElementById("dateTime");
 const sunrise = document.getElementById("sunrise");
 const sunset = document.getElementById("sunset");
 const humidity = document.getElementById("humidity");
+const dlmText = document.getElementById("dlmText");
 const currentWeatherIcon = document.getElementById("currentWeatherIcon");
 const searchBarContainer = document.getElementById("searchContainer");
 const locationBtn = document.getElementById("location");
@@ -554,6 +555,7 @@ window.onload = ()=>{
     locationByCords("42.789379", "-86.107201");
 };
 darkModeBtn.onclick = (e)=>{
+    dlmText.innerHTML === "Dark" ? dlmText.innerHTML = "Light" : dlmText.innerHTML = "Dark";
     e.preventDefault();
     htmlTag.classList.toggle("dark");
     sunIcon.classList.toggle("hidden");

@@ -12,17 +12,27 @@
 
 <body class="text-black dark:text-white min-h-screen m-0 relative bg-light dark:bg-dark">
   <main class=" flex items-center justify-center flex-col">
-    <div>
-      <button id="location"><img class="w-6 h-6 md:w-10 md:h-10" src="/placeholder.5c4c624c.png" alt="Location pin. Use to get current locations weather"></button>
+    <header class="flex flex-row">
+<section class="flex flex-col justify-center items-center" id="geoLocationButtonContainer">
+  <p class="text-xs">Current</p>
+  <button id="location"><img class="w-6 h-6 md:w-10 md:h-10" src="/placeholder.5c4c624c.png" alt="Location pin. Use to get current locations weather"></button>
+    <p class="text-xs">Location</p>
+</section>
+
       <span class="text-orange-500 font-custom font-bold text-4xl md:text-6xl ml-4 mr-4">Windmill Weather</span>
-      <button class="w-6 h-6 md:w-10 md:h-10" id="darkModeToggle"><img id="moonIcon" class="w-6 h-6 md:w-10 md:h-10" src="/moon.0469fd53.png" alt="cute smiling moon. Clicking this changes it to a sun and turns the background to dark mode"><img id="sunIcon" class="hidden w-6 h-6 md:w-10 md:h-10" src="/sun.09088062.png" alt="cute smiling sun. Clicking this changes it to a moon and turns the background to light mode"></button>
-    </div>
+
+      <section class="flex flex-col justify-center items-center" id="darkModeButtonContainer">
+        <p id="dlmText" class="text-xs">Dark</p>
+        <button class="w-6 h-6 md:w-10 md:h-10" id="darkModeToggle"><img id="moonIcon" class="w-6 h-6 md:w-10 md:h-10" src="/moon.0469fd53.png" alt="cute smiling moon. Clicking this changes it to a sun and turns the background to dark mode"><img id="sunIcon" class="hidden w-6 h-6 md:w-10 md:h-10" src="/sun.09088062.png" alt="cute smiling sun. Clicking this changes it to a moon and turns the background to light mode"></button>
+          <p class="text-xs">Mode</p>
+      </section>
+    </header>
 
     <form class="flex flex-col align-middle" action="">
       <div id="searchContainer" class="">
     </div></form>
 
-    <section style="width: 100%;" class="flex">
+    <section id="currentWeatherInformation" style="width: 100%;" class="flex">
       <div class="flex flex-col w-2/4 items-center">
         <p class="text-xl md:text-3xl lg:text-4xl font-bold" id="city">Holland, MI, US</p>
         <p class=" font-worksans text-xl lg:text-2xl" id="dateTime"></p>
@@ -43,22 +53,23 @@
       </div>
     </section>
 
-    <div class="ml-3 mt-2">
+    <section id="currentWeatherData" class="ml-3 mt-2">
       <p class="text-lg md:text-xl lg:text-2xl" id="wind"></p>
       <p class="text-lg md:text-xl lg:text-2xl" id="humidity"></p>
       <p class="text-lg md:text-xl lg:text-2xl" id="sunrise"></p>
       <p class="text-lg md:text-xl lg:text-2xl" id="sunset"></p>
-    </div>
-    <div class="flex justify-center mt-8">
+    </section>
+
+    <section id="toggleForHourlyDaily" class="flex justify-center mt-8">
       <label class="relative flex justify-between items-center group p-2 text-xl">
         <p class="font-bold">Hourly</p>
         <input type="checkbox" id="hourlyDailyToggle" class="absolute left-1/2 -translate-x-1/2 w-full h-full peer appearance-none rounded-md">
         <span class="w-16 h-10 flex items-center flex-shrink-0 ml-4 p-1 bg-orange-500 rounded-full duration-300 ease-in-out peer-checked:bg-blue-500 after:w-8 after:h-8 after:bg-white after:rounded-full after:shadow-md after:duration-300 peer-checked:after:translate-x-6 group-hover:after:translate-x-1"></span>
         <p class="ml-4 font-bold">Daily</p>
       </label>
-    </div>
+    </section>
 
-    <div class="flex flex-row items-start mb-8 mt-8 justify-center">
+    <section id="dailyHourlyWeatherData" class="flex flex-row items-start mb-8 mt-8 justify-center">
       <div class="flex flex-col gap-2">
         <div class="hourlyDailyWeather text-3xl text-right relative right-2 h-11"></div>
         <div class="hourlyDailyWeather text-4xl text-right relative right-2 h-11"></div>
@@ -158,7 +169,7 @@
         </div>
 
       </div>
-    </div>
+    </section>
   </main>
   <footer class="absolute bottom-0 left-0 text-center w-full">
     <div>
@@ -166,7 +177,6 @@
     </div>
   </footer>
   <script src="/index.6b815632.js" defer=""></script>
-
 </body>
 
 </html>

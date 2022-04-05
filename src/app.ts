@@ -19,6 +19,7 @@ const dateTime = document.getElementById("dateTime") as HTMLParagraphElement;
 const sunrise = document.getElementById("sunrise") as HTMLParagraphElement;
 const sunset = document.getElementById("sunset") as HTMLParagraphElement;
 const humidity = document.getElementById("humidity") as HTMLParagraphElement;
+const dlmText = document.getElementById("dlmText") as HTMLParagraphElement;
 const currentWeatherIcon = document.getElementById("currentWeatherIcon") as HTMLDivElement;
 const searchBarContainer = document.getElementById("searchContainer") as HTMLDivElement;
 const locationBtn = document.getElementById("location") as HTMLButtonElement;
@@ -36,6 +37,7 @@ window.onload = () => {
 };
 
 darkModeBtn.onclick = (e) => {
+  dlmText.innerHTML === "Dark" ? dlmText.innerHTML = "Light" : dlmText.innerHTML = "Dark";
   e.preventDefault();
   htmlTag.classList.toggle("dark");
   sunIcon.classList.toggle("hidden");

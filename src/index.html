@@ -12,15 +12,25 @@
 
 <body class="text-black dark:text-white min-h-screen m-0 relative bg-light dark:bg-dark">
   <main class=" flex items-center justify-center flex-col">
-    <header>
-      <button id="location"><img class="w-6 h-6 md:w-10 md:h-10" src="./assets/placeholder.png"
-          alt="Location pin. Use to get current locations weather"></button>
+    <header class="flex flex-row">
+<section class="flex flex-col justify-center items-center" id="geoLocationButtonContainer">
+  <p class="text-xs">Current</p>
+  <button id="location"><img class="w-6 h-6 md:w-10 md:h-10" src="./assets/placeholder.png"
+    alt="Location pin. Use to get current locations weather"></button>
+    <p class="text-xs">Location</p>
+</section>
+
       <span class="text-orange-500 font-custom font-bold text-4xl md:text-6xl ml-4 mr-4">Windmill Weather</span>
-      <button class="w-6 h-6 md:w-10 md:h-10" id="darkModeToggle"><img id="moonIcon" class="w-6 h-6 md:w-10 md:h-10"
+
+      <section class="flex flex-col justify-center items-center" id="darkModeButtonContainer">
+        <p id="dlmText" class="text-xs">Dark</p>
+        <button class="w-6 h-6 md:w-10 md:h-10" id="darkModeToggle"><img id="moonIcon" class="w-6 h-6 md:w-10 md:h-10"
           src="./assets/moon.png"
           alt="cute smiling moon. Clicking this changes it to a sun and turns the background to dark mode"><img
           id="sunIcon" class="hidden w-6 h-6 md:w-10 md:h-10" src="./assets/sun.png"
           alt="cute smiling sun. Clicking this changes it to a moon and turns the background to light mode"></button>
+          <p class="text-xs">Mode</p>
+      </section>
     </header>
 
     <form class="flex flex-col align-middle" action="">
