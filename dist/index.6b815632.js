@@ -645,6 +645,7 @@ async function locationByCords(lat, long) {
             const data = await output.json();
             console.log(data);
             previousData = createWeatherObject(data);
+            setCityName(lat, long);
             currentWeather(previousData);
             oneCall(previousData);
         }

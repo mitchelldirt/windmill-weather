@@ -78,7 +78,7 @@ const options = {
 
 const ttSearchBox = new SearchBox(services, options);
 const searchBoxHTML = ttSearchBox.getSearchBoxHTML();
-searchBoxHTML.classList.add("dark:text-black")
+searchBoxHTML.classList.add("dark:text-black");
 searchBarContainer.appendChild(searchBoxHTML);
 
 ttSearchBox.on("tomtom.searchbox.resultselected", async function (data: any) {
@@ -133,6 +133,7 @@ async function locationByCords(lat: string, long: string) {
       const data = await output.json();
       console.log(data);
       previousData = createWeatherObject(data);
+      setCityName(lat, long);
       currentWeather(previousData);
       oneCall(previousData);
     }
