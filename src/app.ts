@@ -107,7 +107,7 @@ async function getCoords() {
 }
 
 async function setCityName(lat: string, long: string) {
-  const namedLocation = await fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=1&appid=79994613e7af015836a5a0e8225ca668`, { mode: "cors" });
+  const namedLocation = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${long}&limit=1&appid=79994613e7af015836a5a0e8225ca668`, { mode: "cors" });
   if (namedLocation.status === 200) {
     const output = await namedLocation.json();
     if (output[0].country === "US") {
